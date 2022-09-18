@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <script src="{{ url_for('static', filename='bootstrap\js\bootstrap.bundle.min.js') }}"></script>
+  <title>Python Language Club</title>
+
+</head>
+
+<body>
+  <header class="bg-primary text-white text-center p-5">
+    <div class="display-3">Python Language Club</div>
+    <div class="h5">Opportunities Multiply as they are Seized</div>
+  </header>
+
+
+  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <div class="container-fluid flex justify-content-around">
+      <ul class="navbar-nav">
+        <a class="nav-link{% if session['window']=='home' %} active{% endif %}" href="/home">
+          <li class="nav-item">Home</li>
+        </a>
+        <a class="nav-link{% if session['window']=='about' %} active{% endif %}" href="/about">
+          <li class="nav-item">About</li>
+        </a>
+      </ul>
+
+
+
+      {% if 'user' not in session %}
+      <a class="nav-link" href="/signin" data-toggle="modal" data-target="#signinModal">
+        <span class="text-white">Sign-in/up</span>
+      </a>
+
+      {% else %}
+      <a class="nav-link" href="/signout">
+        <span class="text-white">Sign-out</span>
+      </a>
+
+      {% endif %}
+    </div>
+  </nav>
+
+  {% if 'user' in session %}
+  <div class="text-center h5 mt-5">Welcome {{session['user']}}!</div>
+  {% endif %}
+
+  <main class="container p-2">
+    {% if session['window']=='home' %}
+    {% include "home.html" %}
+
+    {% elif session['window']=='about' %}
+    {% include "about.html" %}
+
+    {% else %}
+    Error
+
+    {% endif %}
+  </main>
+
+
+  <div class="mt-5 p-4 bg-dark text-white text-center">
+    <span class="h4 mb-2">Contact:</span>
+    <ul class="ms-4 list-unstyled">
+      <li><b>Phone:</b> 1234567890</li>
+      <li><b>Mail:</b> plcofficial@gmail.com</li>
+      <li><b>Website:</b> Working on Progress</li>
+    </ul>
+  </div>
+
+</body>
+
+</html>
