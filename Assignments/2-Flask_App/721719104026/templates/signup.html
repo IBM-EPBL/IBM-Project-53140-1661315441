@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <script src="{{ url_for('static', filename='bootstrap\js\bootstrap.bundle.min.js') }}"></script>
+  
+  <title>Sign-Up</title>
+</head>
+
+<body class="p-5">
+  <form class="container border border-2 w-50 ps-5 pe-5 pt-3" action="/handle_form/signup" method="post">
+
+    <div class="row">
+      <div class="col p-2 h3 text-center">Sign-up:</div>
+    </div>
+
+    <div class="row p-2">
+      <label class="col h5" for="firstname">First Name: </label>
+      <input class="col" type="text" name="firstname" id="firstname" placeholder="first name" required>
+    </div>
+
+    <div class="row p-2">
+      <label class="col h5" for="lastname">Last Name:</label>
+      <input class="col" type="text" name="lastname" id="lastname" placeholder="last name" required>
+    </div>
+
+    <div class="row p-2">
+      <label class="col h5" for="username">User Name:</label>
+      <input class="col" type="text" name="username" id="username" placeholder="username" required>
+    </div>
+
+    <div class="row p-2">
+      <label class="col h5" for="email">Email:</label>
+      <input class="col" type="email" name="email" id="email" placeholder="email" required>
+    </div>
+
+    <div class="row p-2">
+      <label class="col h5" for="password">Password:</label>
+      <input class="col" type="password" name="password" id="password" placeholder="password" minlength="8" required>
+    </div>
+
+    <div class="text-center p-5">
+      <button type="submit">Sign-up</button>
+    </div>
+
+  </form>
+
+  {% if msg != None %}
+  <script>
+    window.alert("{{ msg }}");
+  </script>
+
+  {% endif %}
+
+</body>
+
+</html>
