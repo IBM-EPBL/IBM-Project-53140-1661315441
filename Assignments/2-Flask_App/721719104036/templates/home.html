@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <title>Home - Karthiban Fans Club</title>
+</head>
+
+<body class="bg-black p-3">
+  <header class="container text-center text-light p-3 border border-5 border-light bg-secondary bg-opacity-25">
+    <h1 class="display-5">Karthiban Fans Club</h1>
+  </header>
+
+  <nav class="navbar navbar-dark justify-content-evenly text-light">
+    <a class="nav-link p-2 bg-secondary bg-opacity-50" href="/home">Home</a>
+    <a class="nav-link p-2" href="/about">About</a>
+    {% if session['user']==None %}
+    <a class="nav-link p-2" href="/signin">Sign-in</a>
+    <a class="nav-link p-2" href="/signup">Sign-up</a>
+    {% else %}
+    <span>User: {{ session['user'] }}</span>
+    <a class="nav-link p-2" href="/signout">Sign-Out</a>
+    {% endif %}
+  </nav>
+
+  <main class="container p-5 border border-5 border-light bg-secondary bg-opacity-25 text-light">
+    <h1>Home:</h1>
+    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusantium, necessitatibus error nisi officia officiis
+    maiores. Et reiciendis ea laudantium provident est expedita, quia illum aliquid incidunt explicabo porro officiis
+    accusamus.
+    Minus non saepe delectus quasi similique earum eius officiis nobis quaerat sequi vero tenetur, maxime voluptas
+    veniam facere, repellat, laudantium debitis porro! Culpa nostrum voluptatem quam accusamus eius quas impedit.
+    Dolorum quasi placeat beatae adipisci. Pariatur nisi suscipit minus fuga. Tempora quas repudiandae est delectus
+    fugiat assumenda hic accusantium doloribus maxime saepe perferendis iusto explicabo, eligendi cumque adipisci error
+    tenetur!
+    Expedita eaque libero hic reprehenderit quia, soluta natus architecto aliquid dolores aut, aspernatur praesentium
+    omnis a placeat sapiente. Ducimus, esse. Architecto est fugit optio voluptates sit alias quasi quae quia.
+    Veniam, atque! Obcaecati aperiam molestias quidem labore cum laboriosam odit dolores recusandae ducimus iusto, ut id
+    quis adipisci praesentium numquam harum commodi nostrum assumenda eos vero sed possimus! Nostrum, esse?
+    Harum iste quisquam hic veniam voluptatem repellat voluptatibus eligendi, soluta, ipsam quae provident excepturi
+    quas porro explicabo a adipisci dolore, cumque dolorum non. Soluta voluptatum quia culpa aliquam, tenetur nobis?
+    Perspiciatis fugiat dignissimos eligendi ea eaque cumque, culpa optio assumenda consectetur mollitia dolores quae
+    deserunt quia, reprehenderit amet sequi consequatur velit iste repellendus consequuntur adipisci provident, ipsam
+    animi. Esse, deleniti?
+    Tempora laboriosam accusantium necessitatibus ipsam. Eaque ipsa eos doloribus corporis cum laborum quisquam soluta
+    placeat doloremque debitis necessitatibus voluptates dolorum ut temporibus nobis, totam reprehenderit corrupti
+    dolores sit facilis tempore.
+    Quia debitis ad consequuntur esse, saepe quam repudiandae. Ipsa mollitia laboriosam nemo quidem dolor illo facere!
+    Recusandae ratione excepturi dolores sequi, repudiandae enim eum, voluptas, nisi beatae voluptates delectus?
+    Repudiandae.
+    Ab minus totam iusto impedit reiciendis quisquam ex voluptatem placeat unde. Nam eum suscipit, deleniti nostrum quam
+    architecto. Dolor molestiae dolorem id! Nam, fugit. Qui dolorem blanditiis libero sit asperiores.
+  </main>
+
+  <footer class="mt-3 ps-5 pe-5 container text-center text-light p-3 border border-5 border-light bg-secondary bg-opacity-25">
+    <h3>Contact:</h3>
+    <div class="container">
+      <div class="row">
+        <div class="col">E-Mail:</div>
+        <div class="col">karthiban@gmail.com</div>
+      </div>
+      <div class="row">
+        <div class="col">Phone:</div>
+        <div class="col">9876543210</div>
+      </div>
+      <div class="row">
+        <div class="col">Website:</div>
+        <div class="col">Current Page</div>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
