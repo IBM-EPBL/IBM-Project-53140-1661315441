@@ -1,12 +1,13 @@
 import ibm_db
 
 class DBManager():
-  def __init__(self, HOSTNAME, PORT, UID, PWD):
+  def __init__(self, HOSTNAME, PORT, SSLServerCertificate, UID, PWD):
     try:
       self.conn = ibm_db.connect('DATABASE=bludb;'
                                 f'HOSTNAME={HOSTNAME};'
                                 f'PORT={PORT};'
                                  'SECURITY=SSL;'
+                                f'SSLServerCertificate={SSLServerCertificate}'
                                  'PROTOCOL=TCPIP;'
                                 f'UID={UID};'
                                 f'PWD={PWD};', '', '')
