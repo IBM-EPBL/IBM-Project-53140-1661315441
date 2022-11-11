@@ -10,7 +10,7 @@
 
     {% if mode=='view' %}
 
-    <a href="/profile/edit"><button>Edit</button></a>
+    <a href="/profile/edit"><button type="button">Edit</button></a>
     <table>
       <tr> <th>Username:</th> <td>{{ UM.user.USERNAME }}</td> </tr>
       <tr> <th>Name:</th>     <td>{{ UM.user.name }}</td>     </tr>
@@ -18,30 +18,30 @@
       <tr> <th>Email:</th>    <td>{{ UM.user.email }}</td>    </tr>
       <tr> <th>Phone:</th>    <td>{{ UM.user.phone }}</td>    </tr>
     </table>
-    <form action="/changepassword"><button>Change Password</button></form>
-    <form action="/removeuser" id="removeuser"></form>
-    <button onclick="removeacc">Remove Account</button>
+    <a href="/profile/changepassword"><button type="button">Change Password</button></a>
+    {% if UM.user.role != 'superadmin' %}
+    <form action="/removeuser" method="post" id="removeuser"></form>
+    <button onclick="removeacc()">Remove Account</button>
+    {% endif %}
+    <a href="/profile/signout"><button type="button">Sign-Out</button></a>
     
     {% elif mode=='edit' %}
     
     <form action="/profile/confirm" method="post">
     <button type="submit">Confirm</button>
-    <a href="/profile/discard"><button>Discard</button></a>
+    <a href="/profile/discard"><button type="button">Discard</button></a>
     <table>
-      <tr> <th>Username:</th> <td>{{ UM.user.USERNAME }}</td>           </tr>
-      <tr> <th>Name:</th>     <td><input type="text" name="name"></td>  </tr>
-      <tr> <th>Role:</th>     <td><input type="text" name="role"></td>  </tr>
-      <tr> <th>Email:</th>    <td><input type="text" name="email"></td> </tr>
-      <tr> <th>Phone:</th>    <td><input type="text" name="phone"></td> </tr>
+      <tr> <th>Username:</th> <td>{{ UM.user.USERNAME }}</td> </tr>
+      <tr> <th>Name:</th>     <td><input type="text" name="name" placeholder="old: {{ UM.user.name }}"></td>  </tr>
+      <tr> <th>Role:</th>     <td>{{ UM.user.role }}    </td> </tr>
+      <tr> <th>Email:</th>    <td><input type="text" name="email" placeholder="old: {{ UM.user.email }}"></td> </tr>
+      <tr> <th>Phone:</th>    <td><input type="text" name="phone" placeholder="old: {{ UM.user.phone }}"></td> </tr>
     </table>
     </form>
-    <form action="/profile/changepassword"><button>Change Password</button></form>
-    <form action="/removeuser" id="removeuser"></form>
-    <button onclick="removeacc">Remove Account</button>
     
-    {% elif mode=='editpass' %}
+    {% elif mode=='changepassword' %}
     
-    <form action="/profile/changepassword", method="post">
+    <form action="/profile/changepasswordconfirm" method="post" id="changepassword">
       <div>
         <label for="password">Old Password: </label>
         <input type="password" id="password" name="password">
@@ -54,7 +54,7 @@
         <label for="cnpassword">Confirm New Password</label>
         <input type="password" id="cnpassword" name="cnpassword">
       </div>
-      <button type="submit">Confirm</button>
+      <button onclick="check()">Confirm</button>
     </form>
 
     {% endif %}
@@ -64,6 +64,12 @@
         if (confirm("Are you sure you wanna delete your account?\n(ACTION CANNOT BE REVERTED)") == true) {
           document.getElementById('removeuser').submit();
         }
+      }
+      function check() {
+        if (document.getElementById('npassword').value != document.getElementById('cnpassword').value)
+          alert("Both new passwords do not match");
+        else
+          document.getElementById('changepassword').submit();
       }
     </script>
     {% else %}

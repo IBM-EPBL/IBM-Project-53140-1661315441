@@ -4,7 +4,8 @@
 <body>
   {% include "header.html" %}
   <main class="container p-4">
-
+      
+    {% if UM.user %}
     <h1>User Management</h1>
     <a href="/usermanagement/add"></a>
     <table>
@@ -31,6 +32,9 @@
       {% endfor %}
       </tr>
     </table>
+    {% else %}
+    <h1>You must be signed in to view the page</h1>
+    {% endif %}
   </main>
 
   </main>
