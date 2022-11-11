@@ -10,6 +10,7 @@ UID = "wxq10827"
 PWD = "ymVaT0kPM3W5j0g5"
 UM = UserManagement(DBManager(HOSTNAME, PORT, SSLServerCertificate, UID, PWD))
 
+
 # Root URL
 @app.route('/')
 def index():
@@ -42,11 +43,41 @@ def usermanagement():
 # Profile - Page
 @app.route('/profile')
 def profile():
-  if not UM.user:
-    session['msg'] = 'Sign in First!'
-    return redirect(url_for(session['page']))
   session['page'] = 'profile'
-  return render_template('profile.html')
+  return render_template('profile.html', mode='view')
+
+@app.route('/profile/<a>', methods=['POST', 'GET'])
+def profile_edit(a):
+  if a=='edit':
+    return render_template('profile.html', mode='edit')
+  
+  elif a=='confirm':
+    try:
+      UM.update(request.form['name'], request.form['role'], 
+                request.form['email'], request.form['phone'])
+      return redirect(url_for('profile'))
+    except Exception:
+      session['msg'] = Exception
+      return render_template('profile.html', mode='edit')
+    
+  elif a=='discard':
+    return redirect(url_for('profile'))
+  
+  elif a=='changepassword':
+    return render_template('profile.html', mode='changepassword')
+  
+  elif a=='changepasswordconfirm':
+    try:
+      password, npassword = request.form['password'], request.form['npassword']
+      UM.update_password(password, npassword)
+      session['msg'] = 'Password Changed Successfully'
+    except Exception: session['msg'] = Exception
+    return redirect(url_for('profile'))
+  
+  elif a=='signout':
+    try: UM.signout()
+    except Exception: session['msg'] = Exception
+    return redirect(url_for('signin'))
 
 # Sign In - Page
 @app.route('/signin')
@@ -75,24 +106,14 @@ def signin_form():
   session.pop('form')
   return redirect(url_for(session['page']))
 
-# Sign Out
-@app.route('/signout')
-def signout():
-  try:
-    UM.signout()
-    session['msg'] = 'Signed out successfully'
-  except Exception: session['msg'] = Exception
-  return redirect(url_for(session['page']))
-
-
 # Remove User
-@app.route('/removeuser')
+@app.route('/removeuser', methods=['POST'])
 def removeuser():
   try:
     UM.remove_user()
     session['msg'] = 'User removed successfully'
   except Exception: session['msg'] = Exception
-  return redirect(url_for(session['page']))
+  return redirect(url_for('signin'))
 
 
 app.errorhandler(404)

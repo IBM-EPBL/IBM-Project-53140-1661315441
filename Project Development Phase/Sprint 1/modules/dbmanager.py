@@ -7,7 +7,6 @@ class DBManager():
                                 f'HOSTNAME={HOSTNAME};'
                                 f'PORT={PORT};'
                                  'SECURITY=SSL;'
-                                f'SSLServerCertificate={SSLServerCertificate}'
                                  'PROTOCOL=TCPIP;'
                                 f'UID={UID};'
                                 f'PWD={PWD};', '', '')
@@ -31,6 +30,14 @@ class DBManager():
               'role':d['ROLE'],'email':d['EMAIL'],'phone':d['PHONE']}
     raise Exception("Invalid username or password")
   
+  def get_users(self):
+    sql = "select * from userdata;"
+    d = ibm_db.exec_immediate(self.conn, sql)
+    l = []
+    while i:=ibm_db.fetch_both(d):
+      l.append((i['USERNAME'],i['PASSWORD'],i['NAME'],i['ROLE'],i['EMAIL'],i['PHONE']))
+    return l
+  
   def update_user(self, oldusername, oldpassword, password, name, role, email, phone):
     if not self.check_user(oldusername, oldpassword):
       raise Exception("Invalid username or password")
@@ -53,10 +60,3 @@ class DBManager():
     sql = f"select * from userdata where username='{username}';"
     return True if ibm_db.fetch_both(ibm_db.exec_immediate(self.conn, sql)) else False
   
-  def get_users(self):
-    sql = "select * from userdata;"
-    d = ibm_db.exec_immediate(self.conn, sql)
-    l = []
-    while i:=ibm_db.fetch_both(d):
-      l.append((i['USERNAME'],i['PASSWORD'],i['NAME'],i['ROLE'],i['EMAIL'],i['PHONE']))
-    return l

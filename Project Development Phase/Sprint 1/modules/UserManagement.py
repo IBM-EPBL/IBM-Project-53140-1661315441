@@ -19,6 +19,7 @@ class User:
       self.pull()
 
   def push(self):
+    print('User.push(): USERNAME: %s, PASSWORD: %s, npassword: %s, name: %s, role: %s, email: %s, phone: %s' % (self.USERNAME, self.PASSWORD, self.npassword, self.name, self.role, self.email, self.phone))
     self.DB.update_user(self.USERNAME, self.PASSWORD, self.npassword,
               self.name, self.role, self.email, self.phone)
     self.npassword = None
@@ -61,13 +62,15 @@ class UserManagement:
       name, role, email, phone))
     if not self.user:
       raise Exception("No user signed in")
-    self.user.name = name
-    self.user.role = role
-    self.user.email = email
-    self.user.phone = phone
+    if name: self.user.name = name 
+    if role: self.user.role = role
+    if email: self.user.email = email
+    if phone: self.user.phone = phone
     self.user.push()
   
   def update_password(self, password, npassword):
+    print("UserManagement.update_password(): password = %s, npassword = %s" % (
+      password, npassword))
     if not self.user:
       raise Exception("No user signed in")
     if self.user.PASSWORD != password:
@@ -78,11 +81,11 @@ class UserManagement:
     self.user.push()
 
   def remove_user(self):
-    print("UserManagement.remove_user(): user = %s" % self.user)
+    print("UserManagement.remove_user(): user = %s" % self.user.USERNAME)
     if not self.user:
       raise Exception("No user signed in")
     self.user.remove()
     self.user = None
 
   def get_users(self):
-    return [User(self.DB, *d, pre=True) for d in self.DB.get_users()]
+    return [User(self.DB, *d, pre=True) for d in self.DB.get_users() if d[3] != 'superadmin']
