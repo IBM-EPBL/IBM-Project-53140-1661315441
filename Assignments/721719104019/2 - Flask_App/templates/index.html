@@ -1,0 +1,70 @@
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <script src="{{ url_for('static', filename='bootstrap\js\bootstrap.bundle.min.js') }}"></script>
+  <title>Tamil Mandram - {{ session['win'] }}</title>
+</head>
+
+<body>
+  <header class="bg-primary text-white text-center p-5">
+    <div class="display-3">Tamil Mandram</div>
+    <div class="h5">Kaasa Panama, ethaachu pootu vidu</div>
+  </header>
+
+  <nav class="navbar navbar-expand-sm bg-dark navbar-dark container-fluid flex justify-content-around">
+    <ul class="navbar-nav">
+      <a class="nav-link{% if session['win']=='home' %} active{% endif %}" href="/home">
+        <li class="nav-item">Home</li>
+      </a>
+      <a class="nav-link{% if session['win']=='about' %} active{% endif %}" href="/about">
+        <li class="nav-item">About</li>
+      </a>
+      {% if 'userdb' in session %}
+      <a class="nav-link{% if session['win']=='profile' %} active{% endif %}" href="/profile">
+        <li class="nav-item">Profile</li>
+      </a>
+      <a class="nav-link" href="/signout">
+        <li class="nav-item">Sign-out</li>
+      </a>
+      <span>User: {{ session['userdb']['username'] }}</span>
+      {% else %}
+      <a class="nav-link{% if session['win'] in ('signin', 'signup') %} active{% endif %}" href="/signin">
+        <li class="nav-item">Sign-in/Sign-up</li>
+      </a>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <main class="container p-2">
+    {% if session['win']=='home' %}
+    {% include "home.html" %}
+    {% elif session['win']=='about' %}
+    {% include "about.html" %}
+    {% elif session['win']=='signin' %}
+    {% include "signin.html" %}
+    {% elif session['win']=='signup' %}
+    {% include "signup.html" %}
+    {% elif session['win']=='profile' %}
+    {% include "profile.html" %}
+    {% else %}
+    <span class="p-5 h2">Error: Page not Found</span>
+    {% endif %}
+  </main>
+
+  <div class="mt-5 p-4 bg-dark text-white text-center">
+    <span class="h4 mb-2">Contact:</span>
+    <ul class="ms-4 list-unstyled">
+      <li><b>Mail:</b> tamilmandram@gmail.com</li>
+    </ul>
+  </div>
+
+  {% if 'msg' in session %}
+  <script>
+    window.alert("{{ session.pop('msg') }}");
+  </script>
+  {% endif %}
+</body>
+
+</html>
