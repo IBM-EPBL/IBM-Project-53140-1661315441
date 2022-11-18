@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-from modules.dbmanager import DBManager
+from modules.DBManager import DBManager
 from modules.UserManagement import Profile, UserManagement
 
 app = Flask(__name__)

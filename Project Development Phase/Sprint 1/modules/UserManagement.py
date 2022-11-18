@@ -1,4 +1,4 @@
-from modules.dbmanager import DBManager
+from modules.DBManager import DBManager
 
 USERPRIVILEGES = {'superadmin':-1, 'admin':0, 'standarduser':1, 'user':1, 'visitor':2}
 
