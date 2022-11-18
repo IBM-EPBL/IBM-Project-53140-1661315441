@@ -2,21 +2,16 @@ import ibm_db
 
 class DBManager():
   def __init__(self, HOSTNAME, PORT, SSLServerCertificate, UID, PWD):
-    try:
-      self.conn = ibm_db.connect('DATABASE=bludb;'
-                                f'HOSTNAME={HOSTNAME};'
-                                f'PORT={PORT};'
-                                 'SECURITY=SSL;'
-                                 'PROTOCOL=TCPIP;'
-                                f'UID={UID};'
-                                f'PWD={PWD};', '', '')
-    except:     
-      print("no connection:", ibm_db.conn_errormsg())
-    else:
-      print("The connection was successful")
+    self.conn = ibm_db.connect('DATABASE=bludb;'
+                              f'HOSTNAME={HOSTNAME};'
+                              f'PORT={PORT};'
+                               'SECURITY=SSL;'
+                               'PROTOCOL=TCPIP;'
+                              f'UID={UID};'
+                              f'PWD={PWD};', '', '')
 
     
-  # Userdata - username(50), password(50), name(50), role(20), email(320), phone(15)
+  # Userdata - username(50), password(100), name(50), role(20), email(320), phone(15)
   def add_user(self, username, password, name, role, email, phone):
     sql = f"""insert into userdata (username,password,name,role,email,phone) 
               values ('{username}','{password}','{name}','{role}','{email}','{phone}');"""
