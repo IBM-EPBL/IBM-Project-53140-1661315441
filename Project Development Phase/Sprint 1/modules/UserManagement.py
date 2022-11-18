@@ -84,6 +84,8 @@ class Profile:
     print("UserManagement.remove_user(): user = %s" % self.user.USERNAME)
     if not self.user:
       raise Exception("No user signed in")
+    if self.user.PASSWORD != password:
+      raise Exception('Incorrect Password')
     self.user.remove()
     self.user = None
 

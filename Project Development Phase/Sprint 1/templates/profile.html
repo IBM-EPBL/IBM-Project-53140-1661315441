@@ -5,23 +5,25 @@
   {% include "header.html" %}
   <main class="container p-4">
 
-    {% if UM.user %}
+    {% if PR.user %}
     <h1>Profile:</h1>
 
     {% if mode=='view' %}
 
     <a href="/profile/edit"><button type="button">Edit</button></a>
     <table>
-      <tr> <th>Username:</th> <td>{{ UM.user.USERNAME }}</td> </tr>
-      <tr> <th>Name:</th>     <td>{{ UM.user.name }}</td>     </tr>
-      <tr> <th>Role:</th>     <td>{{ UM.user.role }}</td>     </tr>
-      <tr> <th>Email:</th>    <td>{{ UM.user.email }}</td>    </tr>
-      <tr> <th>Phone:</th>    <td>{{ UM.user.phone }}</td>    </tr>
+      <tr> <th>Username:</th> <td>{{ PR.user.USERNAME }}</td> </tr>
+      <tr> <th>Name:</th>     <td>{{ PR.user.name }}</td>     </tr>
+      <tr> <th>Role:</th>     <td>{{ PR.user.role }}</td>     </tr>
+      <tr> <th>Email:</th>    <td>{{ PR.user.email }}</td>    </tr>
+      <tr> <th>Phone:</th>    <td>{{ PR.user.phone }}</td>    </tr>
     </table>
     <a href="/profile/changepassword"><button type="button">Change Password</button></a>
-    {% if UM.user.role != 'superadmin' %}
-    <form action="/removeuser" method="post" id="removeuser"></form>
-    <button onclick="removeacc()">Remove Account</button>
+    {% if PR.user.role != 'superadmin' %}
+    <form action="/profile/removeuser" method="post" id="removeuser">
+      <button onclick="removeacc()" type="button" id="rmpasswordbtn">Remove Account</button>
+      <input type="text" name="password" id="rmpassword" placeholder="Password" style="display: none;">
+    </form>
     {% endif %}
     <a href="/profile/signout"><button type="button">Sign-Out</button></a>
     
@@ -31,11 +33,11 @@
     <button type="submit">Confirm</button>
     <a href="/profile/discard"><button type="button">Discard</button></a>
     <table>
-      <tr> <th>Username:</th> <td>{{ UM.user.USERNAME }}</td> </tr>
-      <tr> <th>Name:</th>     <td><input type="text" name="name" placeholder="old: {{ UM.user.name }}"></td>  </tr>
-      <tr> <th>Role:</th>     <td>{{ UM.user.role }}    </td> </tr>
-      <tr> <th>Email:</th>    <td><input type="text" name="email" placeholder="old: {{ UM.user.email }}"></td> </tr>
-      <tr> <th>Phone:</th>    <td><input type="text" name="phone" placeholder="old: {{ UM.user.phone }}"></td> </tr>
+      <tr> <th>Username:</th> <td>{{ PR.user.USERNAME }}</td> </tr>
+      <tr> <th>Name:</th>     <td><input type="text" name="name" placeholder="old: {{ PR.user.name }}"></td>  </tr>
+      <tr> <th>Role:</th>     <td>{{ PR.user.role }}    </td> </tr>
+      <tr> <th>Email:</th>    <td><input type="text" name="email" placeholder="old: {{ PR.user.email }}"></td> </tr>
+      <tr> <th>Phone:</th>    <td><input type="text" name="phone" placeholder="old: {{ PR.user.phone }}"></td> </tr>
     </table>
     </form>
     
@@ -61,7 +63,11 @@
     
     <script>
       function removeacc() {
-        if (confirm("Are you sure you wanna delete your account?\n(ACTION CANNOT BE REVERTED)") == true) {
+        if (document.getElementById('rmpassword').style.display == 'none'){
+          document.getElementById('rmpassword').style.display = 'inline';
+          document.getElementById('rmpasswordbtn').innerText = 'Confirm Remove Password'
+        }
+        else if (confirm("Are you sure you wanna delete your account?\n(ACTION CANNOT BE REVERTED)") == true) {
           document.getElementById('removeuser').submit();
         }
       }
