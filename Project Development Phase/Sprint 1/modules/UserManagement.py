@@ -1,5 +1,6 @@
 from modules.dbmanager import DBManager
 
+USERPRIVILEGES = {'superadmin':-1, 'admin':0, 'standarduser':1, 'user':1, 'visitor':2}
 
 class User:
   def __init__(self, DB, username, password, name=None, role=None, email=None, phone=None, pre=False):
@@ -7,6 +8,7 @@ class User:
     self.USERNAME = username
     self.PASSWORD = password
     self.npassword = None
+    self.privilege = None
 
     if all([name, role, email, phone]):  # Sign-up
       if not pre:
@@ -15,6 +17,7 @@ class User:
       self.role = role
       self.email = email
       self.phone = phone
+      self.privilege = USERPRIVILEGES[self.role]
     else:  # Sign-in
       self.pull()
 
@@ -30,17 +33,19 @@ class User:
     self.role = d['role']
     self.email = d['email']
     self.phone = d['phone']
+    self.privilege = USERPRIVILEGES[self.role]
 
   def remove(self):
     self.DB.remove_user(self.USERNAME, self.PASSWORD)
 
 
-class UserManagement:
+class Profile:
   def __init__(self, DB):
     self.DB = DB
     self.user = None
 
   def signin(self, username, password):
+    username = username.lower()
     print("UserManagement.signin(): username = %s, password = %s" %
               (username, password))
     self.user = User(self.DB, username, password)
@@ -51,11 +56,6 @@ class UserManagement:
       self.user = None
     else:
       raise Exception("No user signed in")
-
-  def signup(self, username, password, name, role, email, phone):
-    print("UserManagement.signup(): username = %s, password = %s, name = %s, role = %s, email = %s, phone = %s" % (
-      username, password, name, role, email, phone))
-    self.user = User(self.DB, username, password, name, role, email, phone)
 
   def update(self, name, role, email, phone):
     print("UserManagement.update(): name = %s, role = %s, email = %s, phone = %s" % (
@@ -80,12 +80,27 @@ class UserManagement:
     self.user.npassword = npassword
     self.user.push()
 
-  def remove_user(self):
+  def remove_user(self, password):
     print("UserManagement.remove_user(): user = %s" % self.user.USERNAME)
     if not self.user:
       raise Exception("No user signed in")
     self.user.remove()
     self.user = None
 
+
+class UserManagement:
+  def __init__(self, DB):
+    self.DB = DB
+  
   def get_users(self):
-    return [User(self.DB, *d, pre=True) for d in self.DB.get_users() if d[3] != 'superadmin']
+    return [User(self.DB, *d, pre=True) for d in self.DB.get_users()]
+  
+  def add_user(self, username, password, name, role, email, phone):
+    pass
+  
+  def update_user(self, username, password, npassword, name, role, email, phone):
+    pass
+  
+  def remove_user(self):
+    pass
+  
