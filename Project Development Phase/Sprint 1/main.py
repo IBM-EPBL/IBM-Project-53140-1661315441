@@ -82,7 +82,7 @@ def profile_action(a):
                       request.form['email'], request.form['phone'])
       return redirect(url_for('profile'))
     except Exception as e:
-      session['msg'] = e
+      session['msg'] = str(e)
       return render_template('profile.html', mode='edit')
 
   elif a == 'discard':
@@ -97,14 +97,14 @@ def profile_action(a):
       PR.update_password(password, npassword)
       session['msg'] = 'Password Changed Successfully'
     except Exception as e:
-      session['msg'] = e
+      session['msg'] = str(e)
     return redirect(url_for('profile'))
 
   elif a == 'signout':
     try:
       PR.signout()
     except Exception as e:
-      session['msg'] = e
+      session['msg'] = str(e)
     return redirect(url_for('signin'))
   
   elif a == 'removeuser':
@@ -113,7 +113,8 @@ def profile_action(a):
       PR.remove_user(password)
       session['msg'] = 'User removed successfully'
     except Exception as e:
-      session['msg'] = e
+      session['msg'] = str(e)
+      return redirect(url_for('profile'))
     return redirect(url_for('signin'))
     
   else:
@@ -139,7 +140,7 @@ def signin_action():
     session['msg'] = 'Signed in successfully'
     session['page'] = session['tmp']
   except Exception as e:
-    session['msg'] = e
+    session['msg'] = str(e)
     return redirect(url_for(session['page']))
   session.pop('form')
   return redirect(url_for(session['page']))
