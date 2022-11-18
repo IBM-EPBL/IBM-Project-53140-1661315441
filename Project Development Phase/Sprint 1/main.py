@@ -83,7 +83,7 @@ def profile_action(a):
       return redirect(url_for('profile'))
     except Exception as e:
       session['msg'] = str(e)
-      return render_template('profile.html', mode='edit')
+    return render_template('profile.html', mode='edit')
 
   elif a == 'discard':
     return redirect(url_for('profile'))
@@ -103,6 +103,7 @@ def profile_action(a):
   elif a == 'signout':
     try:
       PR.signout()
+      session['msg'] = 'Signed out successfully'
     except Exception as e:
       session['msg'] = str(e)
     return redirect(url_for('signin'))
@@ -134,14 +135,13 @@ def signin():
 @app.route('/signin/handle_form', methods=['POST'])
 def signin_action():
   session['form'] = {'username': request.form['username'],
-                       'password': request.form['password']}
+                     'password': request.form['password']}
   try:
     PR.signin(session['form']['username'], session['form']['password'])
     session['msg'] = 'Signed in successfully'
-    session['page'] = session['tmp']
   except Exception as e:
     session['msg'] = str(e)
-    return redirect(url_for(session['page']))
+    return redirect(url_for('signin'))
   session.pop('form')
   return redirect(url_for(session['page']))
 
