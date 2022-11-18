@@ -1,0 +1,28 @@
+{% if 'userdb' in session %}
+<div class="container mt-5 text-center">
+  <div class="row">
+    <div class="col border border-2 p-2 h4">Username:</div>
+    <div class="col border border-2 p-2 h5">{{ session['userdb']['username'] }}</div>
+  </div>
+  <div class="row">
+    <div class="col p-5 h4">
+      <button type="button" class="btn btn-danger" onclick="removeacc()">Delete Account</button>
+    </div>
+  </div>
+</div>
+
+<form id="removeacc" action="/removeacc"></form>
+{% else %}
+<div class="container mt-5 text-center">
+  <div class="row">
+    <div class="col border border-2 p-2 h4">You must be Signed in to View this page</div>
+</div>
+{% endif %}
+
+<script>
+  function removeacc() {
+    if (confirm("Are you sure you wanna delete your account?\n(ACTION CANNOT BE REVERTED)") == true) {
+      document.getElementById('removeacc').submit();
+    }
+  }
+</script>
