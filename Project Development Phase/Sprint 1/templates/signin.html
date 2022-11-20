@@ -5,7 +5,7 @@
   {% include "header.html" %}
   <main class="container p-4">
 
-    <form class="container border border-2 w-50 ps-5 pe-5 pt-3 pb-3 mt-5" action="/signin/handle_form" method="post">
+    <form class="container border border-2 w-50 ps-5 pe-5 pt-3 pb-3 mt-5" action="/signin/handle_form" method="POST">
 
       <div class="row">
         <div class="col p-2 h3 text-center">Sign-in:</div>
@@ -27,11 +27,6 @@
 
     </form>
 
-    {% if 'form' in session %}
-    <script>
-      document.getElementById('username').value = "{{ session['form']['username'] }}"
-    </script>
-    {% endif %}
 
   </main>
   {% include "scripts.html" %}

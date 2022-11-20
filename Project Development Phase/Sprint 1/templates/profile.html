@@ -21,17 +21,18 @@
     <a href="/profile/changepassword"><button type="button">Change Password</button></a>
     {% if PR.user.role != 'superadmin' %}
     <form action="/profile/removeuser" method="post" id="removeuser">
-      <button onclick="removeacc()" type="button" id="rmpasswordbtn">Remove Account</button>
-      <input type="text" name="password" id="rmpassword" placeholder="Password" style="display: none;">
+      <button onclick="removeacc()" type="button" id="removepasswordbtn">Remove Account</button>
+      <input type="password" name="password" id="removepassword" placeholder="Password" style="display: none;">
     </form>
     {% endif %}
     <a href="/profile/signout"><button type="button">Sign-Out</button></a>
     
+
     {% elif mode=='edit' %}
     
-    <form action="/profile/confirm" method="post">
+    <form action="/profile/confirmedit" method="post">
     <button type="submit">Confirm</button>
-    <a href="/profile/discard"><button type="button">Discard</button></a>
+    <a href="/profile/discardedit"><button type="button">Discard</button></a>
     <table>
       <tr> <th>Username:</th> <td>{{ PR.user.USERNAME }}</td> </tr>
       <tr> <th>Name:</th>     <td><input type="text" name="name" placeholder="old: {{ PR.user.name }}"></td>  </tr>
@@ -39,8 +40,10 @@
       <tr> <th>Email:</th>    <td><input type="text" name="email" placeholder="old: {{ PR.user.email }}"></td> </tr>
       <tr> <th>Phone:</th>    <td><input type="text" name="phone" placeholder="old: {{ PR.user.phone }}"></td> </tr>
     </table>
+    <span>Note: Leave the inputs empty to keep existing value</span>
     </form>
     
+
     {% elif mode=='changepassword' %}
     
     <form action="/profile/changepasswordconfirm" method="post" id="changepassword">
@@ -49,31 +52,31 @@
         <input type="password" id="password" name="password">
       </div>
       <div>
-        <label for="npassword">New Password</label>
-        <input type="password" id="npassword" name="npassword">
+        <label for="newpassword">New Password</label>
+        <input type="password" id="newpassword" name="newpassword">
       </div>
       <div>
-        <label for="cnpassword">Confirm New Password</label>
-        <input type="password" id="cnpassword" name="cnpassword">
+        <label for="confirmnewpassword">Confirm New Password</label>
+        <input type="password" id="confirmnewpassword" name="confirmnewpassword">
       </div>
-      <button onclick="check()">Confirm</button>
+      <button onclick="check()" type="button">Confirm</button>
     </form>
 
     {% endif %}
     
     <script>
       function removeacc() {
-        if (document.getElementById('rmpassword').style.display == 'none'){
-          document.getElementById('rmpassword').style.display = 'inline';
-          document.getElementById('rmpasswordbtn').innerText = 'Confirm Remove Password'
+        if (document.getElementById('removepassword').style.display == 'none'){
+          document.getElementById('removepassword').style.display = 'inline';
+          document.getElementById('removepasswordbtn').innerText = 'Confirm Remove Account'
         }
         else if (confirm("Are you sure you wanna delete your account?\n(ACTION CANNOT BE REVERTED)") == true) {
           document.getElementById('removeuser').submit();
         }
       }
       function check() {
-        if (document.getElementById('npassword').value != document.getElementById('cnpassword').value)
-          alert("Both new passwords do not match");
+        if (document.getElementById('newpassword').value != document.getElementById('confirmnewpassword').value)
+          alert("Both new Passwords do not Match");
         else
           document.getElementById('changepassword').submit();
       }

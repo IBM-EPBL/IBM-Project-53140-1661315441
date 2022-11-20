@@ -1,6 +1,6 @@
-{% if 'msg' in session %}
+{% if 'message' in session %}
 <script>
-  window.alert("{{ session.pop('msg') }}");
+  window.alert("{{ session.pop('message') }}");
 </script>
 {% endif %}
 

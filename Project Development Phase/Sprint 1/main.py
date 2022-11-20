@@ -14,10 +14,10 @@ PR = Profile(DB)
 UM = UserManagement(DB)
 """ try: PR.signin('superadmin', 'toor1234') # TODO - Remove this line
 except: DB.add_user('superadmin', 'toor1234', 'Super Admin', 'superadmin', '', '') """
-try: PR.signin('dhinesh', 'helloworld') # TODO - Remove this line
+""" try: PR.signin('dhinesh', 'helloworld') # TODO - Remove this line
 except:
   DB.add_user('dhinesh', 'helloworld', 'Dhinesh', 'admin', 'dhinesh88825@gmail.com', '0987654321')
-  PR.signin('dhinesh', 'helloworld')
+  PR.signin('dhinesh', 'helloworld') """
 
 
 # Root URL
@@ -56,10 +56,40 @@ def usermanagement():
 @app.route('/usermanagement/<a>', methods=['GET', 'POST'])
 def usermanagement_action(a):
   if a == 'adduser':
-    pass
+    username = request.form['username']
+    password = request.form['password']
+    name = request.form['name']
+    role = request.form['role']
+    email = request.form['email']
+    phone = request.form['phone']
+    try:
+      UM.add_user(username, password, name, role, email, phone)
+      session['message'] = 'User added successfully'
+    except Exception as e:
+      session['message'] = str(e)
+    return redirect(url_for('usermanagement'))
+  
+  elif a == 'edituser':
+    username = request.form['username']
+    password = request.form['password']
+    name = request.form['name']
+    role = request.form['role']
+    email = request.form['email']
+    phone = request.form['phone']
+    try:
+      UM.update_user(username, password, name, role, email, phone)
+      session['message'] = 'User updated successfully'
+    except Exception as e:
+      session['message'] = str(e)
+    return redirect(url_for('usermanagement'))
 
   elif a == 'removeuser':
-    pass
+    try:
+      UM.remove_user(username, password)
+      session['message'] = 'User removed successfully'
+    except Exception as e:
+      session['message'] = str(e)
+    return redirect(url_for('usermanagement'))
 
   else:
     return render_template('404.html')
@@ -76,16 +106,15 @@ def profile_action(a):
   if a == 'edit':
     return render_template('profile.html', mode='edit')
 
-  elif a == 'confirm':
+  elif a == 'confirmedit':
     try:
-      PR.update(request.form['name'], request.form['role'],
-                      request.form['email'], request.form['phone'])
+      PR.update(request.form['name'], request.form['email'], request.form['phone'])
       return redirect(url_for('profile'))
     except Exception as e:
-      session['msg'] = str(e)
+      session['message'] = str(e)
     return render_template('profile.html', mode='edit')
 
-  elif a == 'discard':
+  elif a == 'discardedit':
     return redirect(url_for('profile'))
 
   elif a == 'changepassword':
@@ -93,28 +122,28 @@ def profile_action(a):
 
   elif a == 'changepasswordconfirm':
     try:
-      password, npassword = request.form['password'], request.form['npassword']
-      PR.update_password(password, npassword)
-      session['msg'] = 'Password Changed Successfully'
+      password, newpassword = request.form['password'], request.form['newpassword']
+      PR.update_password(password, newpassword)
+      session['message'] = 'Password Changed Successfully'
     except Exception as e:
-      session['msg'] = str(e)
+      session['message'] = str(e)
     return redirect(url_for('profile'))
 
   elif a == 'signout':
     try:
       PR.signout()
-      session['msg'] = 'Signed out successfully'
+      session['message'] = 'Signed out Successfully'
     except Exception as e:
-      session['msg'] = str(e)
+      session['message'] = str(e)
     return redirect(url_for('signin'))
   
   elif a == 'removeuser':
     try:
       password = request.form['password']
       PR.remove_user(password)
-      session['msg'] = 'User removed successfully'
+      session['message'] = 'User Removed Successfully'
     except Exception as e:
-      session['msg'] = str(e)
+      session['message'] = str(e)
       return redirect(url_for('profile'))
     return redirect(url_for('signin'))
     
@@ -126,25 +155,20 @@ def profile_action(a):
 @app.route('/signin')
 def signin():
   if PR.user:
-    session['msg'] = 'You are already Signed in'
+    session['message'] = 'You are already Signed in'
     return redirect(url_for(session['page']))
-  if 'form' in session:
-    session.pop('form')
   return render_template('signin.html')
 
 @app.route('/signin/handle_form', methods=['POST'])
 def signin_action():
-  session['form'] = {'username': request.form['username'],
-                     'password': request.form['password']}
   try:
-    PR.signin(session['form']['username'], session['form']['password'])
-    session['msg'] = 'Signed in successfully'
+    username, password = request.form['username'], request.form['password']
+    PR.signin(username, password)
+    session['message'] = 'Signed in Successfully'
   except Exception as e:
-    session['msg'] = str(e)
+    session['message'] = str(e)
     return redirect(url_for('signin'))
-  session.pop('form')
   return redirect(url_for(session['page']))
-
 
 
 
