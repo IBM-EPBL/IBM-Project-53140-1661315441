@@ -11,20 +11,20 @@ class DB:
                                'PWD=IKhcJPLkVrBcyGZN;', '', '')
 
   def add(self, username, password):
-    sql = "insert into Userdata (USERNAME,PASSWORD) values (?, ?);"
+    sql = "insert into SIGNIN (USERNAME,PASSWORD) values (?, ?);"
     stmt = ibm_db.prepare(self.conn, sql)
     ibm_db.bind_param(stmt, 1, username)
     ibm_db.bind_param(stmt, 2, password)
     ibm_db.execute(stmt)
     
   def remove(self, username):
-    sql = "delete from Userdata where username=?"
+    sql = "delete from SIGNIN where username=?"
     stmt = ibm_db.prepare(self.conn, sql)
     ibm_db.bind_param(stmt, 1, username)
     ibm_db.execute(stmt)
   
   def get_data(self, username):
-    sql = "select * from Userdata where username=?"
+    sql = "select * from SIGNIN where username=?"
     stmt = ibm_db.prepare(self.conn, sql)
     ibm_db.bind_param(stmt, 1, username)
     ibm_db.execute(stmt)
@@ -35,7 +35,7 @@ class DB:
     return None
   
   def check_user(self, username, password):
-    sql = "SELECT * FROM Userdata WHERE username=? AND password=?"
+    sql = "SELECT * FROM SIGNIN WHERE username=? AND password=?"
     stmt = ibm_db.prepare(self.conn, sql)
     ibm_db.bind_param(stmt, 1, username)
     ibm_db.bind_param(stmt, 2, password)
