@@ -1,0 +1,167 @@
+<!doctype html>
+<html class="no-js" lang="zxx">
+
+<head>
+    <title>Job board</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/flaticon.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/price_rangs.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/slicknav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/animate.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/magnific-popup.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/fontawesome-all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/themify-icons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/slick.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/nice-select.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}">
+</head>
+
+<body>
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <img src="{{ url_for('static', filename='assets/img/logo/logo.png') }}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Preloader Start -->
+    <header>
+        <!-- Header Start -->
+        <div class="header-area header-transparrent">
+            <div class="headder-top header-sticky">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-3 col-md-2">
+                            <!-- Logo -->
+                            <div class="logo">
+                                <a href="index.html"><img
+                                        src="{{ url_for('static', filename='assets/img/logo/logo.png') }}" alt=""></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 col-md-9">
+                            <div class="menu-wrapper">
+                                <!-- Main-menu -->
+                                <div class="main-menu">
+                                    <nav class="d-none d-lg-block">
+                                        <ul id="navigation">
+                                            <li><a href="index.html">Home</a></li>
+                                            <li><a href="#">Contact</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+
+                                <div class="header-btn d-none f-right d-lg-block">
+                                    <a href="#" class="btn head-btn1">Register</a>
+                                    <a href="#" class="btn head-btn2">Login</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mobile_menu d-block d-lg-none"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->
+    </header>
+    <main>
+
+        <!-- slider Area Start-->
+        <div class="slider-area ">
+            <!-- Mobile Menu -->
+            <div class="slider-active">
+                <div class="single-slider slider-height d-flex align-items-center"
+                    data-background="{{ url_for('static', filename='assets/img/hero/h1_hero.jpg') }}">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-xl-6 col-lg-9 col-md-10">
+                                <div class="hero__caption">
+                                    <h1>Find the most exciting startup jobs</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Search Box -->
+                        <div class="row">
+                            <div class="col-xl-8">
+                                <!-- form -->
+                                <form action="#" class="search-box">
+                                    <div class="input-form">
+                                        <input type="text" placeholder="Job Tittle or keyword">
+                                    </div>
+                                    <div class="select-form">
+                                        <div class="select-itms">
+                                            <select name="select" id="select1">
+                                                <option value="">Location BD</option>
+                                                <option value="">Location PK</option>
+                                                <option value="">Location US</option>
+                                                <option value="">Location UK</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="search-form">
+                                        <a href="#">Find job</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom-area footer-bg">
+            <div class="container">
+                <div class="footer-border">
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col-xl-10 col-lg-10 ">
+                            <div class="footer-copy-right">
+                                <p>
+                                    Find Your Career Here
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-2">
+                            <div class="footer-social f-right">
+                                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fas fa-globe"></i></a>
+                                <a href="#"><i class="fab fa-behance"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </footer>
+
+        <script src="{{ url_for('static', filename='assets/js/vendor/modernizr-3.5.0.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/vendor/jquery-1.12.4.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/popper.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/jquery.slicknav.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/owl.carousel.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/slick.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/price_rangs.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/wow.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/animated.headline.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/jquery.magnific-popup.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/jquery.scrollUp.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/jquery.nice-select.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/jquery.sticky.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/contact.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/jquery.form.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/jquery.validate.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/mail-script.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/jquery.ajaxchimp.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/plugins.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
+
+</body>
+
+</html>
