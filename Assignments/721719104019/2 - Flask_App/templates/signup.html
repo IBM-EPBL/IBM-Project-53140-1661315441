@@ -5,11 +5,6 @@
   </div>
 
   <div class="row p-2">
-    <label class="col h5" for="name">Name: </label>
-    <input class="col" type="text" name="name" id="name" placeholder="name" required>
-  </div>
-
-  <div class="row p-2">
     <label class="col h5" for="username">User Name:</label>
     <input class="col" type="text" name="username" id="username" placeholder="username" pattern="[\w\d][\w\d_]+"
       title="letters, numbers and _ only & cannot start with numbers" required>
@@ -33,10 +28,6 @@
 {% if 'form' in session %}
 <script>
   document.getElementById('username').value = "{{ session['form']['username'] }}"
-  document.getElementById('firstname').value = "{{ session['form']['firstname']}}"
-  document.getElementById('lastname').value = "{{ session['form']['lastname']}}"
-  document.getElementById('email').value = "{{ session['form']['email']}}"
-  document.getElementById('phone').value = "{{ session['form']['phone']}}"
   document.getElementById('password').value = "{{ session['form']['password']}}"
 </script>
 {% endif %}
