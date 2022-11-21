@@ -11,13 +11,13 @@ PWD = "9tvjYOOk8eRYq5wu"
 
 DB = DBManager(HOSTNAME, PORT, SSLServerCertificate, UID, PWD)
 PR = Profile(DB)
-UM = UserManagement(DB)
+UM = UserManagement(DB, 'superadmin', 'toor1234')
 """ try: PR.signin('superadmin', 'toor1234') # TODO - Remove this line
 except: DB.add_user('superadmin', 'toor1234', 'Super Admin', 'superadmin', '', '') """
-""" try: PR.signin('dhinesh', 'helloworld') # TODO - Remove this line
+try: PR.signin('dhinesh', 'helloworld') # TODO - Remove this line
 except:
   DB.add_user('dhinesh', 'helloworld', 'Dhinesh', 'admin', 'dhinesh88825@gmail.com', '0987654321')
-  PR.signin('dhinesh', 'helloworld') """
+  PR.signin('dhinesh', 'helloworld')
 
 
 # Root URL
@@ -51,44 +51,55 @@ def warehouse():
 @app.route('/usermanagement')
 def usermanagement():
   session['page'] = 'usermanagement'
-  return render_template('usermanagement.html')
+  return render_template('usermanagement.html', mode='view')
 
 @app.route('/usermanagement/<a>', methods=['GET', 'POST'])
 def usermanagement_action(a):
+  print('User Management: ' + a)
   if a == 'adduser':
+    return render_template('usermanagement.html', mode='add')
+  
+  elif a == 'adduser2':
+    username = request.form['username']
+    password = request.form['password']
+    print('User Management: ' + a + ' - ' + username + ' - ' + password)
+    if DB.check_username(username):
+      session['message'] = 'Username Already exists'
+      return render_template('usermanagement.html', mode='add')
+    return render_template('usermanagement.html', mode='add2', username=username, password=password)
+  
+  elif a == 'confirmadduser':
     username = request.form['username']
     password = request.form['password']
     name = request.form['name']
     role = request.form['role']
     email = request.form['email']
     phone = request.form['phone']
+    print('User Management: ' + a + ' - ' + username + ' - ' + password + ' - ' + name + ' - ' + role + ' - ' + email + ' - ' + phone)
     try:
       UM.add_user(username, password, name, role, email, phone)
-      session['message'] = 'User added successfully'
+      session['message'] = 'User Added Successfully'
+      return redirect(url_for('usermanagement'))
     except Exception as e:
       session['message'] = str(e)
+    return render_template('usermanagement.html', mode='add')
+  
+  elif a == 'discardadduser':
     return redirect(url_for('usermanagement'))
   
   elif a == 'edituser':
     username = request.form['username']
-    password = request.form['password']
-    name = request.form['name']
-    role = request.form['role']
-    email = request.form['email']
-    phone = request.form['phone']
     try:
-      UM.update_user(username, password, name, role, email, phone)
-      session['message'] = 'User updated successfully'
+      user = UM.get_user(username)
+      return render_template('usermanagement.html', mode='edit', username=user.USERNAME, 
+                             password=user.PASSWORD, name=user.name, role=user.role, 
+                             email=user.email, phone=user.phone)
     except Exception as e:
       session['message'] = str(e)
     return redirect(url_for('usermanagement'))
 
   elif a == 'removeuser':
-    try:
-      UM.remove_user(username, password)
-      session['message'] = 'User removed successfully'
-    except Exception as e:
-      session['message'] = str(e)
+    username = request.form['username']
     return redirect(url_for('usermanagement'))
 
   else:
@@ -132,6 +143,7 @@ def profile_action(a):
   elif a == 'signout':
     try:
       PR.signout()
+      UM.pull(PR)
       session['message'] = 'Signed out Successfully'
     except Exception as e:
       session['message'] = str(e)
@@ -164,6 +176,7 @@ def signin_action():
   try:
     username, password = request.form['username'], request.form['password']
     PR.signin(username, password)
+    UM.pull(PR)
     session['message'] = 'Signed in Successfully'
   except Exception as e:
     session['message'] = str(e)

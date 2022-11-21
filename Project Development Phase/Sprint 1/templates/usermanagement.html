@@ -5,9 +5,19 @@
   {% include "header.html" %}
   <main class="container p-4">
       
-    {% if UM.user %}
-    <h1>User Management</h1>
-    <a href="/usermanagement/add"></a>
+    {% if not UM.user %}
+    <h1>You must be signed in to view the page</h1>
+    {% else %}
+
+    {% if UM.user.privilege > 0 %}
+    <h1>You don't have enough Permission to View this Page</h1>
+    {% else %}
+    
+
+    {% if mode=='view' %}
+    
+
+    <h1>User Management:</h1>
     <table>
       <tr>
         <th>Username</th>
@@ -24,18 +34,129 @@
         <td>{{ user.role }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.phone }}</td>
+        {% if user.privilege < PR.user.privilege %}
         <td>
-          <a href="/usermanagement/{{ user.id }}/edit">Edit</a>
-          <a href="/usermanagement/{{ user.id }}/remove">Remove</a>
+          <form action="/usermanagement/edituser" method="post">
+            <input type="hidden" name="username" value="{{ user.USERNAME }}">
+            <button type="submit">Edit</button>
+          </form>
+          <form action="/usermanagement/removeuser" method="post">
+            <input type="hidden" name="username" value="{{ user.USERNAME }}">
+            <button type="submit">Remove</button>
+          </form>
         </td>
+        {% endif %}
       </tr>
       {% endfor %}
       </tr>
     </table>
-    {% else %}
-    <h1>You must be signed in to view the page</h1>
+
+
+    {% elif mode=='add' %}
+
+
+    <h1>Create New User:</h1>
+    <form action="/usermanagement/confirmadduser" method="post" id="createnewuser">
+      <table>
+        <tr>
+          <th><label for="username">Username</label></th>
+          <td><input id="username" type="text" name="username" minlength="3" placeholder="username" required></td>
+        </tr>
+        <tr>
+          <th><label for="password">Password</label></th>
+          <td><input id="password" type="password" name="password" minlength="6" placeholder="password" required></td>
+        </tr>
+        <tr>
+          <th><label for="confirmpassword">Confirm Password</label></th>
+          <td><input id="confirmpassword" type="password" name="confirmpassword" minlength="6" placeholder="confirm password" required></td>
+        </tr>
+      </table>
+      <button type="button" onclick="check()">Confirm</button>
+      <a href="/usermanagement/discardadduser"><button type="button">Discard</button></a>
+    </form>
+
+    <script>
+      function check() {
+        if (document.getElementById('password').value != document.getElementById('confirmpassword').value)
+          alert("Both Passwords do not Match");
+        else
+          document.getElementById('createnewuser').submit();
+      }
+    </script>
+
+
+    {% elif mode=='add2' %}
+
+
+    <h1>Create New User:</h1>
+    <table>
+      <tr>
+        <th>Username</th>
+        <td>{{ username }}</td>
+      </tr>
+    </table>
+    <form action="/usermanagement/confirmadduser" method="post">
+      <input type="hidden" name="username" value="{{ username }}">
+      <input type="hidden" name="password" value="{{ password }}">
+      <table>
+        <tr>
+          <th><label for="role">Role</label></th>
+          <td>
+            <select name="role" id="role">
+              <option value="user">Standard User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="email">Email</label></th>
+          <td><input id="email" type="email" name="email" placeholder="email" required></td>
+        </tr>
+        <tr>
+          <th><label for="phone">Phone</label></th>
+          <td><input id="phone" type="tel" name="phone" placeholder="phone" required></td>
+        </tr>
+      </table>
+      <button type="submit">Confirm</button>
+      <a href="/usermanagement/discardadduser"><button type="button">Discard</button></a>
+    </form>
+
+
+    {% elif mode=='edit' %}
+    
+    
+    <h1>Edit User:</h1>
+    <table>
+      <tr>
+        <th><label for="username">Username</label></th>
+        <td>{{ username }}</td>
+      </tr>
+      <tr>
+        <th><label for="role">Role</label></th>
+        <td>
+          <select name="role" id="role">
+            <option value="user" {% if role=="user" %}selected="selected"{% endif %}>Standard User</option>
+            <option value="admin" {% if role=="admin" %}selected="selected"{% endif %}>Admin</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <th><label for="email">Email</label></th>
+        <td><input id="email" type="email" name="email" placeholder="old: {{ email }}" required></td>
+      </tr>
+      <tr>
+        <th><label for="phone">Phone</label></th>
+        <td><input id="phone" type="tel" name="phone" placeholder="phone" required></td>
+      </tr>
+    </table>
+    <span>Note: Leave the inputs empty to keep existing value</span>
+
+
     {% endif %}
-  </main>
+
+    {% endif %}
+
+    {% endif %}
 
   </main>
   {% include "scripts.html" %}

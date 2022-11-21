@@ -1,6 +1,6 @@
 from modules.DBManager import DBManager
 
-USERPRIVILEGES = {'superadmin':-1, 'admin':0, 'standarduser':1, 'user':1, 'visitor':2}
+USERPRIVILEGES = {'superadmin':-1, 'admin':0, 'user':1, 'visitor':2}
 
 class User:
   def __init__(self, DB, USERNAME, PASSWORD, name=None, role=None, email=None, phone=None, pre=False):
@@ -12,7 +12,6 @@ class User:
     if all([name, role, email, phone]):  # Sign-up
       if not pre:
         DB.add_user(USERNAME, PASSWORD, name, role, email, phone)
-      self.USERNAME = USERNAME
       self.name = name
       self.role = role
       self.email = email
@@ -94,16 +93,86 @@ class Profile:
 class UserManagement:
   def __init__(self, DB):
     self.DB = DB
+    self.PR = None
+    self.users = []
+    
+  
+  def pull(self, PR):
+    if PR.privilege < 1:
+      self.PR = PR
+      for i in self.DB.get_users_with_password(PR.user.USERNAME, PR.user.PASSWORD):
+        self.users.append(User(self.DB, i['username'], i['password'], i['name'], 
+                               i['role'], i['email'], i['phone'], pre=True))
+    else:
+      self.PR = None
+      self.users = []
+  
   
   def get_users(self):
-    return [User(self.DB, *d, pre=True) for d in self.DB.get_users()]
+    if not self.PR:
+      raise Exception("No Admin Signed in")
+    return self.users
+  
+  def get_user(self, username):
+    for user in self.users:
+      if user.USERNAME == username:
+        return user
+    raise Exception("User Not Found")
+      
   
   def add_user(self, username, password, name, role, email, phone):
-    DB.add_user(username, password, name, role, email, phone)
+    if not self.PR:
+      raise Exception("No Admin Signed in")
+    if role == 'superadmin':
+      raise Exception("Cannot Create Super Admin")
+    if role == 'admin' and self.PR.user.privilege >= 0:
+      raise Exception("Only Super Admin can Create Admin")
+    user = User(self.DB, username, password, name, role, email, phone)
+    self.users.append(user)
   
-  def update_user(self, oldusername, oldpassword, password, name, role, email, phone):
-    DB.update_user(oldusername, oldpassword, password, name, role, email, phone)
   
-  def remove_user(self, username, password):
-    DB.remove_user(username, password)
+  def update_user(self, username, password, name, role, email, phone):
+    user = None
+    for i in self.users:
+      if i.USERNAME == username:
+        user = i
+        break
+    else:
+      raise Exception("User Not Found")
+    if not password: password = user.PASSWORD
+    if not name: name = user.name
+    if not role: role = user.role
+    if not email: email = user.email
+    if not phone: phone = user.phone
+    
+    if not self.PR:
+      raise Exception("No Admin Signed in")
+    if self.PR.user.USERNAME == username and self.PR.user.role == 'superadmin':
+      raise Exception("Cannot Update Self Superadmin from Here")
+    if role == 'superadmin':
+      raise Exception("Cannot Update to Super Admin")
+    if (role == 'admin' or user.role == 'admin') and self.PR.user.privilege >= 0:
+      raise Exception("Only Super Admin can Update Admin")
+    
+    user.push()
+  
+  
+  def remove_user(self, username):
+    user = None
+    for i in self.users:
+      if i.USERNAME == username:
+        user = i
+        break
+    else:
+      raise Exception("User Not Found")
+    
+    if not self.PR:
+      raise Exception("No Admin Signed in")
+    if self.PR.user.USERNAME == username:
+      raise Exception("Cannot Remove Self from Here")
+    if self.PR.user.USERNAME == username and self.PR.user.role == 'superadmin':
+      raise Exception("Cannot Remove Superadmin")
+    
+    self.users.remove(user)
+    user.remove()
   

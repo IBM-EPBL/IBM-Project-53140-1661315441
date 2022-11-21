@@ -40,8 +40,26 @@ class DBManager():
       l.append({'username':i['USERNAME'],'name':i['NAME'],
                 'role':i['ROLE'],'email':i['EMAIL'],'phone':i['PHONE']})
     return l
-      
-      
+  
+  
+  def get_users_with_password(self, adminusername, adminpassword):
+    sql = f"""select username from userdata 
+              where username='{adminusername}' and password='{adminpassword}';"""
+    d = ibm_db.fetch_both(ibm_db.exec_immediate(self.conn, sql))
+    if not d:
+      raise Exception("Invalid Username or Password")
+    if d['ROLE'] not in ('superadmin', 'admin'):
+      raise Exception("You are not an admin")
+    
+    sql = f"""select username,password,name,role,email,phone from userdata;"""
+    d = ibm_db.exec_immediate(self.conn, sql)
+    l=[]
+    while i:=ibm_db.fetch_both(d):
+      l.append({'username':i['USERNAME'], 'password':i['PASSWORD'],'name':i['NAME'],
+                'role':i['ROLE'],'email':i['EMAIL'],'phone':i['PHONE']})
+    return l
+    
+  
   def update_user(self, username, password, name, role, email, phone):
     if not self.check_user(username, password):
       raise Exception("Invalid Username or Password")

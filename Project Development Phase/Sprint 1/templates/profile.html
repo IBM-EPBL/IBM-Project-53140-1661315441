@@ -8,7 +8,9 @@
     {% if PR.user %}
     <h1>Profile:</h1>
 
+
     {% if mode=='view' %}
+
 
     <a href="/profile/edit"><button type="button">Edit</button></a>
     <table>
@@ -30,6 +32,7 @@
 
     {% elif mode=='edit' %}
     
+
     <form action="/profile/confirmedit" method="post">
     <button type="submit">Confirm</button>
     <a href="/profile/discardedit"><button type="button">Discard</button></a>
@@ -46,6 +49,7 @@
 
     {% elif mode=='changepassword' %}
     
+
     <form action="/profile/changepasswordconfirm" method="post" id="changepassword">
       <div>
         <label for="password">Old Password: </label>
@@ -62,8 +66,10 @@
       <button onclick="check()" type="button">Confirm</button>
     </form>
 
+
     {% endif %}
     
+
     <script>
       function removeacc() {
         if (document.getElementById('removepassword').style.display == 'none'){
@@ -81,6 +87,8 @@
           document.getElementById('changepassword').submit();
       }
     </script>
+
+    
     {% else %}
     <h1>You need to sign in to view this page</h1>
     {% endif %}
