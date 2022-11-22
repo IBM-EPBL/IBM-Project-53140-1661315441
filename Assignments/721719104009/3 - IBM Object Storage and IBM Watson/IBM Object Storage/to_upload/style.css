@@ -3,7 +3,7 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background: fixed no-repeat center url('bg.jpg');
+  background: fixed no-repeat center url('imgs/bg.jpg');
   color: white
 }
 
