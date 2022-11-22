@@ -1,0 +1,33 @@
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: fixed no-repeat center url('imgs/bg.jpg');
+  color: white
+}
+
+h1 {
+  font-size: 50px;
+  background:rgba(0, 0, 0, 0.2)
+}
+
+div.gallery {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+div.gallery_item {
+  width: 40vw;
+  border: 10px solid rgba(204, 197, 185, 0.5);
+  margin: 10px;
+  padding: 0px 10px 10px 10px;
+  background:rgba(255, 255, 255, 0.1)
+}
+
+div.gallery_item img {
+  max-width: 40vw;
+}

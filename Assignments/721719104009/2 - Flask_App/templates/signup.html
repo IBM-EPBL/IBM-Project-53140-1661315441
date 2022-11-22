@@ -1,0 +1,33 @@
+<form class="container border border-2 w-50 ps-5 pe-5 pt-3 pb-3" action="/handle_form" method="post">
+
+  <div class="row">
+    <div class="col p-2 h3 text-center">Sign-up:</div>
+  </div>
+
+  <div class="row p-2">
+    <label class="col h5" for="username">User Name:</label>
+    <input class="col" type="text" name="username" id="username" placeholder="username" pattern="[\w\d][\w\d_]+"
+      title="letters, numbers and _ only & cannot start with numbers" required>
+  </div>
+
+  <div class="row p-2">
+    <label class="col h5" for="password">Password:</label>
+    <input class="col" type="password" name="password" id="password" placeholder="password" minlength="8" required>
+  </div>
+
+  <div class="text-center p-5">
+    <button type="submit">Sign-up</button>
+  </div>
+
+  <div class="row text-center p-2">
+    <a class="h6" href="/signin">Sign-in with Existing Account</a>
+  </div>
+
+</form>
+
+{% if 'form' in session %}
+<script>
+  document.getElementById('username').value = "{{ session['form']['username'] }}"
+  document.getElementById('password').value = "{{ session['form']['password']}}"
+</script>
+{% endif %}
