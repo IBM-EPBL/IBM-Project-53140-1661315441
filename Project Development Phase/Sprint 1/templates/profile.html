@@ -5,7 +5,12 @@
   {% include "header.html" %}
   <main class="container p-4">
 
-    {% if 'username' in session %}
+    {% if 'username' not in session %}
+    
+    <h1>You need to sign in to view this page</h1>
+    
+    {% else %}
+    
     {% set user = UM.get_user(session['username']) %}
     <h1>Profile:</h1>
 
@@ -89,9 +94,6 @@
       }
     </script>
 
-    
-    {% else %}
-    <h1>You need to sign in to view this page</h1>
     {% endif %}
 
   </main>

@@ -62,15 +62,15 @@ def usermanagement():
 
 @app.route('/usermanagement/<a>', methods=['GET', 'POST'])
 def usermanagement_action(a):
-  if a == 'adduser':
-    return render_template('usermanagement.html', mode='add')
+  if a == 'newuser':
+    return render_template('usermanagement.html', mode='adduser')
   
-  elif a == 'adduser2':
+  elif a == 'adduser':
     username, password = request.form['username'], request.form['password']
     if UM.check_username(username):
       session['message'] = 'Username Already exists'
-      return render_template('usermanagement.html', mode='add')
-    return render_template('usermanagement.html', mode='add2', username=username, password=password)
+      return render_template('usermanagement.html', mode='adduser')
+    return render_template('usermanagement.html', mode='adduser2', username=username, password=password)
   
   elif a == 'confirmadduser':
     username = request.form['username']
@@ -87,7 +87,7 @@ def usermanagement_action(a):
       session['message'] = str(e)
     return render_template('usermanagement.html', mode='add')
   
-  elif a == 'discardadduser':
+  elif a == 'discard':
     return redirect(url_for('usermanagement'))
   
   elif a == 'edituser':
@@ -95,14 +95,32 @@ def usermanagement_action(a):
     try:
       user = UM.get_user(username)
       return render_template('usermanagement.html', mode='edit', username=user.USERNAME, 
-                             password=user.PASSWORD, name=user.name, role=user.role, 
+                             name=user.name, role=user.role, 
                              email=user.email, phone=user.phone)
     except Exception as e:
       session['message'] = str(e)
     return redirect(url_for('usermanagement'))
+  
+  elif a == 'edituserconfirm':
+    username = request.form['username']
+    name = request.form['name']
+    role = request.form['role']
+    email = request.form['email']
+    phone = request.form['phone']
+    try:
+      UM.edit_user(username, name, role, email, phone)
+      return redirect(url_for('usermanagement'))
+    except Exception as e:
+      session['message'] = str(e)
+      user = UM.get_user(username)
+      return render_template('usermanagement.html', mode='edit', username=user.USERNAME, 
+                             name=user.name, role=user.role, 
+                             email=user.email, phone=user.phone)
+    
 
   elif a == 'removeuser':
     username = request.form['username']
+    UM.remove_user(username)
     return redirect(url_for('usermanagement'))
 
   else:
@@ -159,10 +177,8 @@ def profile_action(a):
     try:
       password = request.form['password']
       if not UM.check_user(session['username'], password):
-        print(-3)
         session['message'] = 'Password Incorrect'
         return render_template('profile.html', mode='view')
-      print(-4)
       UM.remove_user(session['username'])
       session.pop('username', None)
       session['message'] = 'User Removed Successfully'

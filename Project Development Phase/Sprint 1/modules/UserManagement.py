@@ -10,7 +10,6 @@ class User:
     self.role = role
     self.email = email
     self.phone = phone
-    self.privilege = None
     if new:
       self.DB.add_user(self.USERNAME, self.PASSWORD, self.name, self.role, self.email, self.phone)
   
@@ -21,15 +20,17 @@ class User:
     self.role = d['role']
     self.email = d['email']
     self.phone = d['phone']
-    self.privilege = USERPRIVILEGES[self.role]
 
     
   def push(self):
     self.DB.update_user(self.USERNAME, self.PASSWORD, self.name, self.role, self.email, self.phone)
   
   
+  def privilege(self):
+    return USERPRIVILEGES[self.role]
+  
+  
   def change_role(self, newrole):
-    self.privilege = USERPRIVILEGES[self.role]
     self.role = newrole
 
   
