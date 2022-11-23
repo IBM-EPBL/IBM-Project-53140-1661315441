@@ -5,11 +5,11 @@
   {% include "header.html" %}
   <main class="container p-4">
       
-    {% if not UM.user %}
+    {% if not PR.user %}
     <h1>You must be signed in to view the page</h1>
     {% else %}
 
-    {% if UM.user.privilege > 0 %}
+    {% if PR.user.privilege > 0 %}
     <h1>You don't have enough Permission to View this Page</h1>
     {% else %}
     

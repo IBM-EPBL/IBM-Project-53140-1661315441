@@ -5,7 +5,8 @@
   {% include "header.html" %}
   <main class="container p-4">
 
-    {% if PR.user %}
+    {% if 'username' in session %}
+    {% set user = UM.get_user(session['username']) %}
     <h1>Profile:</h1>
 
 
@@ -14,14 +15,14 @@
 
     <a href="/profile/edit"><button type="button">Edit</button></a>
     <table>
-      <tr> <th>Username:</th> <td>{{ PR.user.USERNAME }}</td> </tr>
-      <tr> <th>Name:</th>     <td>{{ PR.user.name }}</td>     </tr>
-      <tr> <th>Role:</th>     <td>{{ PR.user.role }}</td>     </tr>
-      <tr> <th>Email:</th>    <td>{{ PR.user.email }}</td>    </tr>
-      <tr> <th>Phone:</th>    <td>{{ PR.user.phone }}</td>    </tr>
+      <tr> <th>Username:</th> <td>{{ user.USERNAME }}</td> </tr>
+      <tr> <th>Name:</th>     <td>{{ user.name }}</td>     </tr>
+      <tr> <th>Role:</th>     <td>{{ user.role }}</td>     </tr>
+      <tr> <th>Email:</th>    <td>{{ user.email }}</td>    </tr>
+      <tr> <th>Phone:</th>    <td>{{ user.phone }}</td>    </tr>
     </table>
     <a href="/profile/changepassword"><button type="button">Change Password</button></a>
-    {% if PR.user.role != 'superadmin' %}
+    {% if user.role != 'superadmin' %}
     <form action="/profile/removeuser" method="post" id="removeuser">
       <button onclick="removeacc()" type="button" id="removepasswordbtn">Remove Account</button>
       <input type="password" name="password" id="removepassword" placeholder="Password" style="display: none;">
@@ -37,11 +38,11 @@
     <button type="submit">Confirm</button>
     <a href="/profile/discardedit"><button type="button">Discard</button></a>
     <table>
-      <tr> <th>Username:</th> <td>{{ PR.user.USERNAME }}</td> </tr>
-      <tr> <th>Name:</th>     <td><input type="text" name="name" placeholder="old: {{ PR.user.name }}"></td>  </tr>
-      <tr> <th>Role:</th>     <td>{{ PR.user.role }}    </td> </tr>
-      <tr> <th>Email:</th>    <td><input type="text" name="email" placeholder="old: {{ PR.user.email }}"></td> </tr>
-      <tr> <th>Phone:</th>    <td><input type="text" name="phone" placeholder="old: {{ PR.user.phone }}"></td> </tr>
+      <tr> <th>Username:</th> <td>{{ user.USERNAME }}</td> </tr>
+      <tr> <th>Name:</th>     <td><input type="text" name="name" placeholder="old: {{ user.name }}"></td>  </tr>
+      <tr> <th>Role:</th>     <td>{{ user.role }}    </td> </tr>
+      <tr> <th>Email:</th>    <td><input type="text" name="email" placeholder="old: {{ user.email }}"></td> </tr>
+      <tr> <th>Phone:</th>    <td><input type="text" name="phone" placeholder="old: {{ user.phone }}"></td> </tr>
     </table>
     <span>Note: Leave the inputs empty to keep existing value</span>
     </form>

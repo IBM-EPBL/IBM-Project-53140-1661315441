@@ -4,7 +4,9 @@
 <body>
   {% include "header.html" %}
   <main class="container p-4">
-
+    {% if 'username' in session %}
+    <h1>You are already Signed in</h1>
+    {% else %}
     <form class="container border border-2 w-50 ps-5 pe-5 pt-3 pb-3 mt-5" action="/signin/handle_form" method="POST">
 
       <div class="row">
@@ -26,8 +28,8 @@
       </div>
 
     </form>
-
-
+        
+    {% endif %}
   </main>
   {% include "scripts.html" %}
 </body>

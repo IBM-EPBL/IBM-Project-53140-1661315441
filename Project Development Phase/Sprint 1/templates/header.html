@@ -46,7 +46,7 @@
     </div>
   </nav>
 
-  {% if PR.user %}
+  {% if 'username' in session %}
   <!-- Profile -->
   <a class="text-white{% if request.path == '/profile' %} text-glow{% endif %}" href="/profile" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View Profile">
     <i class="fa-solid fa-user" style="font-size: x-large;"></i>
