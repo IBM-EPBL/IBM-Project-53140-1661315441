@@ -21,25 +21,25 @@
   <nav class="navbar navbar-expand-sm navbar-dark container-fluid flex justify-content-around">
     <div class="navbar-nav">
       <!-- Dashboard -->
-      <a class="nav-link text-white{% if session['page'] == 'dashboard' %} text-glow{% endif %} d-flex flex-column" href="/dashboard" data-bs-toggle="tooltip"
+      <a class="nav-link text-white{% if '/dashboard' in request.path %} text-glow{% endif %} d-flex flex-column" href="/dashboard" data-bs-toggle="tooltip"
         data-bs-placement="bottom" title="Dashboard">
         <i class="fa-solid fa-gauge" style="font-size: x-large;"></i>
       </a>
 
       <!-- Stock -->
-      <a class="nav-link text-white{% if session['page'] == 'stock' %} text-glow{% endif %} d-flex flex-column" href="/stock" data-bs-toggle="tooltip"
+      <a class="nav-link text-white{% if '/stock' in request.path %} text-glow{% endif %} d-flex flex-column" href="/stock" data-bs-toggle="tooltip"
         data-bs-placement="bottom" title="Stock">
         <i class="fa-solid fa-store" style="font-size: x-large;"></i>
       </a>
 
       <!-- Facilities -->
-      <a class="nav-link text-white{% if session['page'] == 'facilities' %} text-glow{% endif %}" href="/facilities" data-bs-toggle="tooltip" data-bs-placement="bottom"
+      <a class="nav-link text-white{% if '/facilities' in request.path %} text-glow{% endif %}" href="/facilities" data-bs-toggle="tooltip" data-bs-placement="bottom"
         title="Facilities">
         <i class="fa-solid fa-warehouse" style="font-size: x-large;"></i>
       </a>
 
       <!-- User Management -->
-      <a class="nav-link text-white{% if session['page'] == 'usermanagement' %} text-glow{% endif %}" href="/usermanagement" data-bs-toggle="tooltip" data-bs-placement="bottom"
+      <a class="nav-link text-white{% if '/usermanagement' in request.path %} text-glow{% endif %}" href="/usermanagement" data-bs-toggle="tooltip" data-bs-placement="bottom"
         title="User Management">
         <i class="fa-solid fa-users" style="font-size: x-large;"></i>
       </a>
@@ -48,12 +48,12 @@
 
   {% if 'username' in session %}
   <!-- Profile -->
-  <a class="text-white{% if session['page'] == 'profile' %} text-glow{% endif %}" href="/profile" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View Profile">
+  <a class="text-white{% if '/profile' in session.path %} text-glow{% endif %}" href="/profile" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View Profile">
     <i class="fa-solid fa-user" style="font-size: x-large;"></i>
   </a>
   {% else %}
   <!-- Sign-in -->
-  <a class="text-white{% if request.path == '/signin' %} text-glow{% endif %}" href="/signin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sign-in">
+  <a class="text-white{% if '/signin' in request.path %} text-glow{% endif %}" href="/signin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sign-in">
     <i class="fa-solid fa-right-to-bracket" style="font-size: x-large;"></i>
   </a>
   {% endif %}

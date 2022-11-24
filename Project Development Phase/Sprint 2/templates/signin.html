@@ -8,27 +8,38 @@
     {% if 'username' in session %}
     <h1>You are already Signed in</h1>
     {% else %}
-    <form class="container border border-2 w-50 ps-5 pe-5 pt-3 pb-3 mt-5" action="/signin/handle_form" method="POST">
 
-      <div class="row">
-        <div class="col p-2 h3 text-center">Sign-in:</div>
-      </div>
+    <div class="container d-flex" style="width: fit-content;">
+      <img src="{{ url_for('static', filename='img/login.jpg') }}" class="m-5" style="width: 30vw"
+        alt="Login Illustration">
 
-      <div class="row p-2">
-        <label class="col h5" for="username">User Name:</label>
-        <input class="col" type="text" name="username" id="username" placeholder="username" minlength="4" required>
-      </div>
+      <form class="m-5" action="/signin/handle_form" method="POST">
 
-      <div class="row p-2">
-        <label class="col h5" for="password">Password:</label>
-        <input class="col" type="password" name="password" id="password" placeholder="password" minlength="6" required>
-      </div>
+        <div class="form-outline m-4">
+          <div class="col p-2 h3 text-center">Sign-in:</div>
+        </div>
 
-      <div class="text-center p-5">
-        <button type="submit">Sign-in</button>
-      </div>
+        <!-- Username Input -->
+        <div class="form-outline mb-4">
+          <label class="form-label" for="username">User Name:</label>
+          <input class="form-control" type="text" name="username" id="username" placeholder="username" minlength="4"
+            required>
+        </div>
 
-    </form>
+        <!-- Passoword Input -->
+        <div class="form-outline mb-4">
+          <label class="form-label" for="password">Password:</label>
+          <input class="form-control" type="password" name="password" id="password" placeholder="password" minlength="6"
+            required>
+        </div>
+
+        <!-- Sign-in Button -->
+        <div class="form-outline mb-4 text-center">
+          <button class="btn btn-primary btn-block mb-4" type="submit">Sign-in</button>
+        </div>
+
+      </form>
+    </div>
 
     {% endif %}
   </main>
