@@ -5,8 +5,39 @@
   {% include "header.html" %}
   <main class="container p-4">
 
-    <h1>Store Working on Progress</h1>
-    <!-- TODO - Fill Store Content -->
+    <h1>Store</h1>
+
+    <div>
+      Category: 
+      <a href="">All</a>
+      <a href="">Groceries</a>
+      <a href="">Home Appliances</a>
+      <a href="">Stationaries</a>
+      <a href="">Electronics</a>
+      <a href="">Uncategorised</a>
+    </div>
+
+    <br><br>
+
+    <table>
+      <tr>
+        <th>Stock Name</th>
+        <th>Brand</th>
+        <th>Varient</th>
+        <th>Price</th>
+        <th>Category</th>
+        <th>Action</th>
+      </tr>
+      <tr>
+        <td>Palkova</td>
+        <td>Srivaluthur</td>
+        <td>Small</td>
+        <td>2.0</td>
+        <td>Food</td>
+        <td><button>Purchase</button><button>Purchase n</button></td>
+        <td>Count: {}</td>
+      </tr>
+    </table>
 
   </main>
   {% include "scripts.html" %}
