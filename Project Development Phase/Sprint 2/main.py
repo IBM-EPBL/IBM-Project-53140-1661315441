@@ -227,39 +227,26 @@ def usermanagement_mode(a):
 def profile():
   session['page'] = 'profile'
   return render_template('profile.html', mode='view')
-
+# Modes: view, edit, changepassword
 @app.route('/profile/<a>', methods=['POST', 'GET'])
 def profile_mode(a):
   if a == 'edit':
     return render_template('profile.html', mode='edit')
-
-  elif a == 'confirmedit':
-    try:
-      name, email, phone = request.form['name'], request.form['email'], request.form['phone']
-      UM.edit_user(username=session['username'], newname=name, newemail=email, newphone=phone)
-      return redirect(url_for('profile'))
-    except Exception as e:
-      session['message'] = str(e)
-    return render_template('profile.html', mode='edit')
-
-  elif a == 'discardedit':
-    return redirect(url_for('profile'))
-
   elif a == 'changepassword':
     return render_template('profile.html', mode='changepassword')
-
-  elif a == 'changepasswordconfirm':
+  elif a == 'removeuser':
     try:
-      password, newpassword = request.form['password'], request.form['newpassword']
+      password = request.form['password']
       if not UM.check_user(session['username'], password):
         session['message'] = 'Password Incorrect'
-        return render_template('profile.html', mode='changepassword')
-      UM.change_password(session['username'], newpassword)
-      session['message'] = 'Password Changed Successfully'
+        return redirect(url_for('profile'))
+      UM.remove_user(session['username'])
+      session.pop('username', None)
+      session['message'] = 'User Removed Successfully'
+      return redirect(url_for('signin'))
     except Exception as e:
       session['message'] = str(e)
-    return redirect(url_for('profile'))
-
+      return redirect(url_for('profile'))
   elif a == 'signout':
     try:
       session.pop('username', None)
@@ -267,24 +254,37 @@ def profile_mode(a):
     except Exception as e:
       session['message'] = str(e)
     return redirect(url_for('signin'))
-  
-  elif a == 'removeuser':
-    try:
-      password = request.form['password']
-      if not UM.check_user(session['username'], password):
-        session['message'] = 'Password Incorrect'
-        return render_template('profile.html', mode='view')
-      UM.remove_user(session['username'])
-      session.pop('username', None)
-      session['message'] = 'User Removed Successfully'
-    except Exception as e:
-      session['message'] = str(e)
-      return redirect(url_for('profile'))
-    return redirect(url_for('signin'))
-    
   else:
     return render_template('404.html')
 
+@app.route('/profile/<a>/<b>', methods=['POST', 'GET'])
+def profile_action(a, b):
+  if b == 'discard':
+    return redirect(url_for('profile'))
+  elif b == 'save':
+    if a == 'edit':
+      try:
+        name, email, phone = request.form['name'], request.form['email'], request.form['phone']
+        UM.edit_user(username=session['username'], newname=name, newemail=email, newphone=phone)
+        return redirect(url_for('profile'))
+      except Exception as e:
+        session['message'] = str(e)
+      return render_template('profile.html', mode='edit')
+    elif a == 'changepassword':
+      try:
+        password, newpassword = request.form['password'], request.form['newpassword']
+        if not UM.check_user(session['username'], password):
+          session['message'] = 'Password Incorrect'
+          return render_template('profile.html', mode='changepassword')
+        UM.change_password(session['username'], newpassword)
+        session['message'] = 'Password Changed Successfully'
+      except Exception as e:
+        session['message'] = str(e)
+      return redirect(url_for('profile'))
+    else:
+      return render_template('404.html')
+  else:
+    return render_template('404.html')
 
 # Sign In - Page
 @app.route('/signin')
