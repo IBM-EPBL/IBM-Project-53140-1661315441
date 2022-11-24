@@ -3,6 +3,7 @@ from modules.DBManager import DBManager
 from modules.DBManagerProxy import DBManagerProxy
 from modules.UserManagement import UserManagement
 from modules.FacilityManagement import FacilityManagement
+from modules.StockManagement import StockManagement
 
 app = Flask(__name__)
 HOSTNAME = "6667d8e9-9d4d-4ccb-ba32-21da3bb5aafc.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud"
@@ -13,6 +14,7 @@ PWD = "YhVluZhcmvFKS8NT"
 DB = DBManagerProxy(HOSTNAME, PORT, UID, PWD)
 UM = UserManagement(DB)
 FM = FacilityManagement(DB)
+SM = StockManagement(DB)
 
 
 # Session Variables:
@@ -35,15 +37,63 @@ def dashboard():
   return render_template('dashboard.html')
 
 
+
 # Stock - Page
+# stock - id, name, type, price, quantity, facility
 @app.route('/stock')
 def stock():
   session['page'] = 'stock'
-  return render_template('stock.html')
+  return render_template('stock.html', mode='view')
 
 @app.route('/stock/<a>', methods=['GET', 'POST'])
-def stock_item(a):
-  pass
+def stock_mode(a):
+  if a == 'add':
+    return render_template('stock.html', mode='add')
+  elif a == 'update':
+    id = request.form['id']
+    quantity = request.form['quantity']
+    SM.edit_quantity(id, quantity)
+    return render_template('stock.html', mode='view')
+  elif a == 'edit':
+    id = request.form['id']
+    return render_template('stock.html', mode='edit', id=id)
+  elif a == 'delete':
+    id = request.form['id']
+    return render_template('stock.html', mode='delete', id=id)
+  else:
+    return render_template('404.html')
+
+@app.route('/stock/<a>/<b>', methods=['GET', 'POST'])
+def stock_action(a, b):
+  if b == 'discard':
+    return redirect(url_for('stock'))
+  elif b == 'save':
+    if a == 'add':
+      name = request.form['name']
+      type = request.form['type']
+      price = request.form['price']
+      quantity = request.form['quantity']
+      facility = request.form['facility']
+      SM.add_item(name, type, price, quantity, facility)
+      return redirect(url_for('stock'))
+    elif a == 'edit':
+      id = request.form['id']
+      name = request.form['name']
+      type = request.form['type']
+      price = request.form['price']
+      quantity = request.form['quantity']
+      facility = request.form['facility']
+      SM.edit_item(id, name, type, price, quantity, facility)
+      return redirect(url_for('stock'))
+    elif a == 'delete':
+      id = request.form['id']
+      SM.remove_item(id)
+      return redirect(url_for('stock'))
+    else:
+      return render_template('404.html')
+  else:
+    return render_template('404.html')
+
 
 
 
@@ -262,7 +312,7 @@ def page_not_found(e):
 
 @app.context_processor
 def inject_data():
-  return dict(UM=UM, FM=FM)
+  return dict(UM=UM, FM=FM, SM=SM)
 
 
 

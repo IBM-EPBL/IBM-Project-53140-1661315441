@@ -4,8 +4,8 @@ class DBManagerProxy():
                   {'username':'dhinesh', 'password':'helloworld', 'name':'Dhinesh', 'role':'admin', 'email':'dhinesh88825@gmail.com', 'phone':'0987654321'}]
     self.facilities = [{'id':'0', 'name':'Mohan Maligai', 'type':'store', 'address':'1, Sudarsan Nagar, Mahalingapuram, Pollachi', 'email':'mohan0472@gmail.com', 'phone':'0987654321'},
                        {'id':'1', 'name':'Sri Ganesh Stores', 'type':'store', 'address':'2, Sudarsan Nagar, Mahalingapuram, Pollachi', 'email':'ganesh@gmail.com', 'phone':'1234567890'}]
-    self.items = [{'id':'0', 'name':'Milk', 'type':'dairy', 'price':'30', 'quantity':'10', 'expirydate':'01-01-2023', 'facility':'0'},
-                  {'id':'1', 'name':'Eggs', 'type':'dairy', 'price':'10', 'quantity':'20', 'expirydate':'01-01-2023', 'facility':'0'}]
+    self.items = [{'id':'0', 'name':'Milk', 'type':'grocery', 'price':'30', 'quantity':'10', 'facility':'0'},
+                  {'id':'1', 'name':'Eggs', 'type':'grocery', 'price':'10', 'quantity':'20', 'facility':'0'}]
 
   
     
@@ -132,10 +132,10 @@ class DBManagerProxy():
   
   
   
-  # inventory - id, name(50), type(30), price(10,2), quantity, expirydate, facility
-  def add_item(self, name, type, price, quantity, expirydate, facility):
-    print("Adding Item: " + str({'name':name,'type':type,'price':price,'quantity':quantity,'expirydate':expirydate,'facility':facility}))
-    self.items.append({'id':str(len(self.items)),'name':name,'type':type,'price':price,'quantity':quantity,'expirydate':expirydate,'facility':facility})
+  # stock - id, name(50), type(30)(Grocery, Home Appliances, Stationary, Uncategorised), price(10,2), quantity, facility
+  def add_item(self, name, type, price, quantity, facility):
+    print("Adding Item: " + str({'name':name,'type':type,'price':price,'quantity':quantity,'facility':facility}))
+    self.items.append({'id':str(len(self.items)),'name':name,'type':type,'price':price,'quantity':quantity,'facility':facility})
     return str(len(self.items)-1)
   
   
@@ -152,15 +152,14 @@ class DBManagerProxy():
     return self.items
   
   
-  def update_item(self, id, newname, newtype, newprice, newquantity, newexpirydate, newfacility):
-    print("Updating Item: " + str({'id':id,'name':newname,'type':newtype,'price':newprice,'quantity':newquantity,'expirydate':newexpirydate,'facility':newfacility}))
+  def update_item(self, id, newname, newtype, newprice, newquantity, newfacility):
+    print("Updating Item: " + str({'id':id,'name':newname,'type':newtype,'price':newprice,'quantity':newquantity,'facility':newfacility}))
     for i in self.items:
       if i['id'] == id:
         i['name'] = newname
         i['type'] = newtype
         i['price'] = newprice
         i['quantity'] = newquantity
-        i['expirydate'] = newexpirydate
         i['facility'] = newfacility
         return
     raise Exception("Invalid Item ID")

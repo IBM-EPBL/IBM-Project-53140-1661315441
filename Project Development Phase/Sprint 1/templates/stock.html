@@ -5,8 +5,9 @@
   {% include "header.html" %}
   <main class="container p-4">
 
+    <!-- View Stock -->
+    {% if mode == 'view' %}
     <h1>Stock</h1>
-
     <div>
       Category: 
       <a href="">All</a>
@@ -21,22 +22,162 @@
 
     <table>
       <tr>
-        <th>Stock Name</th>
-        <th>Brand</th>
-        <th>Varient</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Type</th>
         <th>Price</th>
-        <th>Category</th>
+        <th>Quantity</th>
         <th>Action</th>
       </tr>
-      <tr>
-        <td>Palkova</td>
-        <td>Srivaluthur</td>
-        <td>Small</td>
-        <td>2.0</td>
-        <td>Food</td>
-        <td>Count: {}</td>
-      </tr>
+      {% set items = SM.get_items() %}
+      {% for i in items %}
+        <tr>
+          <td>{{ i.id }}</td>
+          <td>{{ i.name }}</td>
+          <td>{{ i.type }}</td>
+          <td>{{ i.price }}</td>
+          <td>
+            <form action="/stock/update" method="post">
+              <input type="hidden" name="id" value="{{ i.id }}">
+              <input type="number" name="quantity" value="{{ i.quantity }}">
+              <button type="submit">Update</button>
+            </form>
+          </td>
+          <td>
+            <form action="/stock/edit" method="post">
+              <input type="hidden" name="id" value="{{ i.id }}">
+              <button type="submit">Edit</button>
+            </form>
+          </td>
+          <td>
+            <form action="/stock/delete" method="post">
+              <input type="hidden" name="id" value="{{ i.id }}">
+              <button type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
     </table>
+    <a href="/stock/add"><button type="button">Add New Stock</button></a>
+
+
+
+    <!-- New Item -->
+    {% elif mode == 'add' %}
+    <h1>New Item:</h1>
+    <form action="/stock/add/save" method="post">
+      <div>
+        <label for="name">Name: </label>
+        <input type="text" id="name" name="name" placeholder="name" required>
+      </div>
+      <div>
+        <label for="type">Type: </label>
+        <select name="type" id="type">
+          <option value="uncategorised">Uncategorised</option>
+          <option value="grocery">Groceries</option>
+          <option value="homeappliance">Home Appliances</option>
+          <option value="stationary">Stationaries</option>
+          <option value="electronics">Electronics</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div>
+        <label for="price">Price: </label>
+        <input type="text" id="price" name="price" placeholder="price" required>
+      </div>
+      <div>
+        <label for="quantity">Initial Quantity: </label>
+        <input type="number" id="quantity" name="quantity" value="0" placeholder="quantity" required>
+      </div>
+      <div>
+        <label for="facility">Facility: </label>
+        <select name="facility" id="facility">
+          {% for i in FM.get_facilities() %}
+            <option value="{{ i.id }}">{{ i.name }} ({{ i.id }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <button type="submit">Confirm</button>
+        <a href="/stock/add/discard"><button type="button">Discard</button></a>
+      </div>
+    </form>
+
+
+
+    <!-- Edit Item -->
+    {% elif mode == 'edit' %}
+    {% set i = SM.get_item(id) %}
+    <h1>Edit Item:</h1>
+    <form action="/stock/edit/save" method="post">
+      <div>
+        ID: {{ i.id }}
+        <input type="hidden" name="id" value="{{ i.id }}">
+      </div>
+      <div>
+        <label for="name">Name: </label>
+        <input type="text" id="name" name="name" placeholder="name" value="{{ i.name }}">
+        Current Name: {{ i.name }}
+      </div>
+      <div>
+        <label for="type">Type: </label>
+        <select name="type" id="type">
+          <option value="uncategorised">Uncategorised</option>
+          <option value="groceries">Groceries</option>
+          <option value="homeappliances">Home Appliances</option>
+          <option value="stationaries">Stationaries</option>
+          <option value="electronics">Electronics</option>
+          <option value="other">Other</option>
+        </select>
+        Current Type: {{ i.type }}
+      </div>
+      <div>
+        <label for="price">Price: </label>
+        <input type="text" id="price" name="price" placeholder="price" value="{{ i.price }}">
+        Current Price: {{ i.price }}
+      </div>
+      <div>
+        <label for="quantity">Quantity: </label>
+        <input type="number" id="quantity" name="quantity" value="0" placeholder="quantity" value="{{ i.quantity }}">
+        Current Quantity: {{ i.quantity }}
+      </div>
+      <div>
+        <label for="facility">Facility: </label>
+        <select name="facility" id="facility">
+          {% for i in FM.get_facilities() %}
+            <option value="{{ i.id }}">{{ i.name }} ({{ i.id }})</option>
+          {% endfor %}
+        </select>
+        Current Facility: {{ i.facility }}
+      </div>
+      <div>
+        <button type="submit">Confirm</button>
+        <a href="/stock/edit/discard"><button type="button">Discard</button></a>
+      </div>
+    </form>
+
+
+
+    <!-- Delete Item -->
+    {% elif mode == 'delete' %}
+    {% set i = SM.get_item(id) %}
+    ID: {{ i.id }} <br>
+    Name: {{ i.name }} <br>
+    Type: {{ i.type }} <br>
+    Price: {{ i.price }} <br>
+    Quantity: {{ i.quantity }} <br>
+    Facility: {{ i.facility }} <br>
+    <form action="/stock/delete/save" method="post">
+      <input type="hidden" name="id" value="{{ i.id }}">
+      <button type="submit">Confirm Delete</button>
+    </form>
+
+
+
+    <!-- Invalid URL -->
+    {% else %}
+      <h1>Invalid Mode</h1>
+    {% endif %}
 
   </main>
   {% include "scripts.html" %}
