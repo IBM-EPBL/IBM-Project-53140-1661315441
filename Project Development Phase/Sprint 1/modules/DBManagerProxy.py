@@ -1,7 +1,14 @@
 class DBManagerProxy():
   def __init__(self, HOSTNAME, PORT, UID, PWD):
-    self.users = []
+    self.users = [{'username':'superadmin', 'password':'toor1234', 'name':'Super Admin', 'role':'superadmin', 'email':'', 'phone':''},
+                  {'username':'dhinesh', 'password':'helloworld', 'name':'Dhinesh', 'role':'admin', 'email':'dhinesh88825@gmail.com', 'phone':'0987654321'}]
+    self.facilities = [{'id':'0', 'name':'Mohan Maligai', 'type':'store', 'address':'1, Sudarsan Nagar, Mahalingapuram, Pollachi', 'email':'mohan0472@gmail.com', 'phone':'0987654321'},
+                       {'id':'1', 'name':'Sri Ganesh Stores', 'type':'store', 'address':'2, Sudarsan Nagar, Mahalingapuram, Pollachi', 'email':'ganesh@gmail.com', 'phone':'1234567890'}]
+    self.items = [{'id':'0', 'name':'Milk', 'type':'grocery', 'price':'30', 'quantity':'10', 'facility':'0'},
+                  {'id':'1', 'name':'Eggs', 'type':'grocery', 'price':'10', 'quantity':'20', 'facility':'0'}]
 
+  
+    
     
   # Userdata - username(50), password(100), name(50), role(20), email(320), phone(15)
   def add_user(self, username, password, name, role, email, phone):
@@ -72,6 +79,96 @@ class DBManagerProxy():
   
   
   
-  # workplace - id(auto), name(50), type(20), address(255), email(320), phone(15)
-  # inventory - id, stockname(50), brand(30), varient(30), price(10,2), quantity, expirydate
   
+  # facility - id(auto), name(50), type(20), address(255), email(320), phone(15)
+  def add_facility(self, name, type, address, email, phone):
+    print("Adding Facility: " + str({'name':name,'type':type,'address':address,'email':email,'phone':phone}))
+    self.facilities.append({'id':str(len(self.facilities)),'name':name,'type':type,'address':address,'email':email,'phone':phone})
+    return str(len(self.facilities)-1)
+  
+  
+  def get_facility(self, id):
+    print("Getting Facility: " + str({'id':id}))
+    for i in self.facilities:
+      if i['id'] == id:
+        return i
+    raise Exception("Invalid Facility ID")
+  
+  
+  def get_facilities(self):
+    print("Getting Facilities:" + str(self.facilities))
+    return self.facilities
+  
+  
+  def update_facility(self, id, newname, newtype, newaddress, newemail, newphone):
+    print("Updating Facility: " + str({'id':id,'name':newname,'type':newtype,'address':newaddress,'email':newemail,'phone':newphone}))
+    for i in self.facilities:
+      if i['id'] == id:
+        i['name'] = newname
+        i['type'] = newtype
+        i['address'] = newaddress
+        i['email'] = newemail
+        i['phone'] = newphone
+        return
+    raise Exception("Invalid Facility ID")
+  
+  
+  def remove_facility(self, id):
+    print("Removing Facility: " + str({'id':id}))
+    for i in self.facilities:
+      if i['id'] == id:
+        self.facilities.remove(i)
+        return
+    raise Exception("Invalid Facility ID")
+    
+  
+  def check_facility(self, id):
+    print("Checking Facility: " + str({'id':id}))
+    for i in self.facilities:
+      if i['id']==id:
+        return True
+    return False
+  
+  
+  
+  
+  # stock - id, name(50), type(30)(Grocery, Home Appliances, Stationary, Uncategorised), price(10,2), quantity, facility
+  def add_item(self, name, type, price, quantity, facility):
+    print("Adding Item: " + str({'name':name,'type':type,'price':price,'quantity':quantity,'facility':facility}))
+    self.items.append({'id':str(len(self.items)),'name':name,'type':type,'price':price,'quantity':quantity,'facility':facility})
+    return str(len(self.items)-1)
+  
+  
+  def get_item(self, id):
+    print("Getting Item: " + str({'id':id}))
+    for i in self.items:
+      if i['id'] == id:
+        return i
+    raise Exception("Invalid Item ID")
+  
+  
+  def get_items(self):
+    print("Getting Items:" + str(self.items))
+    return self.items
+  
+  
+  def update_item(self, id, newname, newtype, newprice, newquantity, newfacility):
+    print("Updating Item: " + str({'id':id,'name':newname,'type':newtype,'price':newprice,'quantity':newquantity,'facility':newfacility}))
+    for i in self.items:
+      if i['id'] == id:
+        i['name'] = newname
+        i['type'] = newtype
+        i['price'] = newprice
+        i['quantity'] = newquantity
+        i['facility'] = newfacility
+        return
+    raise Exception("Invalid Item ID")
+  
+  
+  def remove_item(self, id):
+    print("Removing Item: " + str({'id':id}))
+    for i in self.items:
+      if i['id'] == id:
+        self.items.remove(i)
+        return
+    raise Exception("Invalid Item ID")

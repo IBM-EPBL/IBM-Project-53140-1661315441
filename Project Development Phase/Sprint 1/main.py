@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, session, redirect, url_for
 from modules.DBManager import DBManager
 from modules.DBManagerProxy import DBManagerProxy
 from modules.UserManagement import UserManagement
+from modules.FacilityManagement import FacilityManagement
+from modules.StockManagement import StockManagement
 
 app = Flask(__name__)
 HOSTNAME = "6667d8e9-9d4d-4ccb-ba32-21da3bb5aafc.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud"
@@ -11,6 +13,8 @@ PWD = "YhVluZhcmvFKS8NT"
 
 DB = DBManagerProxy(HOSTNAME, PORT, UID, PWD)
 UM = UserManagement(DB)
+FM = FacilityManagement(DB)
+SM = StockManagement(DB)
 
 
 # Session Variables:
@@ -18,13 +22,6 @@ UM = UserManagement(DB)
 # message - The message to display to the user
 # username - The username of the user
 
-
-
-if not UM.check_username('superadmin'):
-  UM.add_user('superadmin', 'toor1234', 'Super Admin', 'superadmin', '', '')
-
-if not UM.check_username('dhinesh'):
-  UM.add_user('dhinesh', 'helloworld', 'Dhinesh', 'admin', 'dhinesh88825@gmail.com', '0987654321')
 
 
 # Root URL
@@ -40,28 +37,126 @@ def dashboard():
   return render_template('dashboard.html')
 
 
-# Store - Page
-@app.route('/store')
-def store():
-  session['page'] = 'store'
-  return render_template('store.html')
+
+# Stock - Page
+# stock - id, name, type, price, quantity, facility
+@app.route('/stock')
+def stock():
+  session['page'] = 'stock'
+  return render_template('stock.html', mode='view')
+
+@app.route('/stock/<a>', methods=['GET', 'POST'])
+def stock_mode(a):
+  if a == 'add':
+    return render_template('stock.html', mode='add')
+  elif a == 'update':
+    id = request.form['id']
+    quantity = request.form['quantity']
+    SM.edit_quantity(id, quantity)
+    return render_template('stock.html', mode='view')
+  elif a == 'edit':
+    id = request.form['id']
+    return render_template('stock.html', mode='edit', id=id)
+  elif a == 'delete':
+    id = request.form['id']
+    return render_template('stock.html', mode='delete', id=id)
+  else:
+    return render_template('404.html')
+
+@app.route('/stock/<a>/<b>', methods=['GET', 'POST'])
+def stock_action(a, b):
+  if b == 'discard':
+    return redirect(url_for('stock'))
+  elif b == 'save':
+    if a == 'add':
+      name = request.form['name']
+      type = request.form['type']
+      price = request.form['price']
+      quantity = request.form['quantity']
+      facility = request.form['facility']
+      SM.add_item(name, type, price, quantity, facility)
+      return redirect(url_for('stock'))
+    elif a == 'edit':
+      id = request.form['id']
+      name = request.form['name']
+      type = request.form['type']
+      price = request.form['price']
+      quantity = request.form['quantity']
+      facility = request.form['facility']
+      SM.edit_item(id, name, type, price, quantity, facility)
+      return redirect(url_for('stock'))
+    elif a == 'delete':
+      id = request.form['id']
+      SM.remove_item(id)
+      return redirect(url_for('stock'))
+    else:
+      return render_template('404.html')
+  else:
+    return render_template('404.html')
 
 
-# Warehouse - Page
-@app.route('/warehouse')
-def warehouse():
-  session['page'] = 'warehouse'
-  return render_template('warehouse.html')
+
+
+# Facilities - Page
+# facility - id(auto), name(50), type(20), address(255), email(320), phone(15)
+@app.route('/facilities')
+def facilities():
+  session['page'] = 'facilities'
+  return render_template('facilities.html', mode='view')
+# Modes: view, add, edit, delete
+@app.route('/facilities/<a>', methods=['GET', 'POST'])
+def facilities_mode(a):
+  if a == 'add':
+    return render_template('facilities.html', mode='add')
+  elif a == 'edit':
+    id = request.form['id']
+    print('\n\n\n')
+    print('id:',id)
+    return render_template('facilities.html', mode='edit', id=id)
+  elif a == 'delete':
+    id = request.form['id']
+    return render_template('facilities.html', mode='delete', id=id)
+  else:
+    return render_template('404.html')
+
+@app.route('/facilities/<a>/<b>', methods=['GET', 'POST'])
+def facilities_action(a,b):
+  if b == 'discard':
+    return redirect(url_for('facilities'))
+  elif b == 'save':
+    if a == 'add':
+      name = request.form['name']
+      type = request.form['type']
+      address = request.form['address']
+      email = request.form['email']
+      phone = request.form['phone']
+      FM.add_facility(name, type, address, email, phone)  
+      return redirect(url_for('facilities'))
+    elif a == 'edit':
+      id = request.form['id']
+      name = request.form['name']
+      type = request.form['type']
+      address = request.form['address']
+      email = request.form['email']
+      phone = request.form['phone']
+      FM.edit_facility(id, name, type, address, email, phone)
+      return redirect(url_for('facilities'))
+    elif a == 'delete':
+      id = request.form['id']
+      FM.remove_facility(id)
+      return redirect(url_for('facilities'))
+
 
 
 # User Management - Page
+# Userdata - username(50), password(100), name(50), role(20), email(320), phone(15)
 @app.route('/usermanagement')
 def usermanagement():
   session['page'] = 'usermanagement'
   return render_template('usermanagement.html', mode='view')
 
 @app.route('/usermanagement/<a>', methods=['GET', 'POST'])
-def usermanagement_action(a):
+def usermanagement_mode(a):
   if a == 'newuser':
     return render_template('usermanagement.html', mode='adduser')
   
@@ -134,7 +229,7 @@ def profile():
   return render_template('profile.html', mode='view')
 
 @app.route('/profile/<a>', methods=['POST', 'GET'])
-def profile_action(a):
+def profile_mode(a):
   if a == 'edit':
     return render_template('profile.html', mode='edit')
 
@@ -217,7 +312,7 @@ def page_not_found(e):
 
 @app.context_processor
 def inject_data():
-  return dict(UM=UM)
+  return dict(UM=UM, FM=FM, SM=SM)
 
 
 
