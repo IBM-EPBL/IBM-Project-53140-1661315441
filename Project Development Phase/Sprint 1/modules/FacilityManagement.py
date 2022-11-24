@@ -8,10 +8,11 @@ class Facility:
     self.email = email
     self.phone = phone
     if new:
-      self.DB.add_facility(self.id, self.name, self.type, self.address, self.email, self.phone)
+      self.id = self.DB.add_facility(self.name, self.type, self.address, self.email, self.phone)
   
   def pull(self):
     d = self.DB.get_facility(self.id)
+    self.id = d['id']
     self.name = d['name']
     self.type = d['type']
     self.address = d['address']
@@ -54,4 +55,25 @@ class FacilityManagement:
   def get_facilities(self):
     return self.f
   
+  
+  def edit_facility(self, id, name, type, address, email, phone):
+    for i in self.f:
+      if i.id == id:
+        if name: i.name = name
+        if type: i.type = type
+        if address: i.address = address
+        if email: i.email = email
+        if phone: i.phone = phone
+        i.push()
+        return
+    raise Exception('Facility not found')
+  
+  
+  def remove_facility(self, id):
+    for i in self.f:
+      if i.id == id:
+        self.f.remove(i)
+        i.remove()
+        return
+    raise Exception('Facility not found')
   

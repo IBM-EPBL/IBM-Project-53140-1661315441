@@ -35,11 +35,15 @@ def dashboard():
   return render_template('dashboard.html')
 
 
-# Store - Page
-@app.route('/store')
-def store():
-  session['page'] = 'store'
-  return render_template('store.html')
+# Stock - Page
+@app.route('/stock')
+def stock():
+  session['page'] = 'stock'
+  return render_template('stock.html')
+
+@app.route('/stock/<a>', methods=['GET', 'POST'])
+def stock_item(a):
+  pass
 
 
 
@@ -89,6 +93,7 @@ def facilities_action(a,b):
       return redirect(url_for('facilities'))
     elif a == 'delete':
       id = request.form['id']
+      FM.remove_facility(id)
       return redirect(url_for('facilities'))
 
 
