@@ -1,5 +1,6 @@
 <html>
-{% include "head.html" %}
+
+<head>{% include "head.html" %}</head>
 
 <body>
   {% include "header.html" %}
@@ -28,27 +29,27 @@
         <th>Actions</th>
       </tr>
       {% for i in UM.get_users() %}
-        <tr>
-          <td>{{ i.USERNAME }}</td>
-          <td>{{ i.name }}</td>
-          <td>{{ i.role }}</td>
-          <td>{{ i.email }}</td>
-          <td>{{ i.phone }}</td>
-          {% if i.privilege() > user.privilege() %}
-          <td>
-            <form action="/usermanagement/edituser" method="post">
-              <input type="hidden" name="username" value="{{ i.USERNAME }}">
-              <button type="submit">Edit</button>
-            </form>
-          </td>
-          <td>
-            <form action="/usermanagement/removeuser" method="post">
-              <input type="hidden" name="username" value="{{ i.USERNAME }}">
-              <button type="submit">Remove</button>
-            </form>
-          </td>
-          {% endif %}
-        </tr>
+      <tr>
+        <td>{{ i.USERNAME }}</td>
+        <td>{{ i.name }}</td>
+        <td>{{ i.role }}</td>
+        <td>{{ i.email }}</td>
+        <td>{{ i.phone }}</td>
+        {% if i.privilege() > user.privilege() %}
+        <td>
+          <form action="/usermanagement/edituser" method="post">
+            <input type="hidden" name="username" value="{{ i.USERNAME }}">
+            <button type="submit">Edit</button>
+          </form>
+        </td>
+        <td>
+          <form action="/usermanagement/removeuser" method="post">
+            <input type="hidden" name="username" value="{{ i.USERNAME }}">
+            <button type="submit">Remove</button>
+          </form>
+        </td>
+        {% endif %}
+      </tr>
       {% endfor %}
       </tr>
     </table>
@@ -71,7 +72,8 @@
         </tr>
         <tr>
           <th><label for="confirmpassword">Confirm Password</label></th>
-          <td><input id="confirmpassword" type="password" name="confirmpassword" minlength="4" placeholder="confirm password" required></td>
+          <td><input id="confirmpassword" type="password" name="confirmpassword" minlength="4"
+              placeholder="confirm password" required></td>
         </tr>
       </table>
       <button type="button" onclick="check()">Confirm</button>
@@ -126,8 +128,8 @@
 
 
     {% elif mode=='edit' %}
-    
-    
+
+
     <h1>Edit User:</h1>
     <form action="/usermanagement/edituserconfirm" method="post">
       <input type="hidden" name="username" value="{{ username }}">

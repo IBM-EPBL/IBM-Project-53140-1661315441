@@ -1,16 +1,17 @@
 <html>
-{% include "head.html" %}
+
+<head>{% include "head.html" %}</head>
 
 <body>
   {% include "header.html" %}
   <main class="container p-4">
 
     {% if 'username' not in session %}
-    
+
     <h1>You need to sign in to view this page</h1>
-    
+
     {% else %}
-    
+
     {% set user = UM.get_user(session['username']) %}
     <h1>Profile:</h1>
 
@@ -20,11 +21,26 @@
 
     <a href="/profile/edit"><button type="button">Edit</button></a>
     <table>
-      <tr> <th>Username:</th> <td>{{ user.USERNAME }}</td> </tr>
-      <tr> <th>Name:</th>     <td>{{ user.name }}</td>     </tr>
-      <tr> <th>Role:</th>     <td>{{ user.role }}</td>     </tr>
-      <tr> <th>Email:</th>    <td>{{ user.email }}</td>    </tr>
-      <tr> <th>Phone:</th>    <td>{{ user.phone }}</td>    </tr>
+      <tr>
+        <th>Username:</th>
+        <td>{{ user.USERNAME }}</td>
+      </tr>
+      <tr>
+        <th>Name:</th>
+        <td>{{ user.name }}</td>
+      </tr>
+      <tr>
+        <th>Role:</th>
+        <td>{{ user.role }}</td>
+      </tr>
+      <tr>
+        <th>Email:</th>
+        <td>{{ user.email }}</td>
+      </tr>
+      <tr>
+        <th>Phone:</th>
+        <td>{{ user.phone }}</td>
+      </tr>
     </table>
     <a href="/profile/changepassword"><button type="button">Change Password</button></a>
     {% if user.role != 'superadmin' %}
@@ -34,27 +50,42 @@
     </form>
     {% endif %}
     <a href="/profile/signout"><button type="button">Sign-Out</button></a>
-    
+
 
     {% elif mode=='edit' %}
-    
+
 
     <form action="/profile/confirmedit" method="post">
-    <button type="submit">Confirm</button>
-    <a href="/profile/discardedit"><button type="button">Discard</button></a>
-    <table>
-      <tr> <th>Username:</th> <td>{{ user.USERNAME }}</td> </tr>
-      <tr> <th>Name:</th>     <td><input type="text" name="name" placeholder="old: {{ user.name }}"></td>  </tr>
-      <tr> <th>Role:</th>     <td>{{ user.role }}    </td> </tr>
-      <tr> <th>Email:</th>    <td><input type="email" name="email" placeholder="old: {{ user.email }}"></td> </tr>
-      <tr> <th>Phone:</th>    <td><input type="tel" name="phone" placeholder="old: {{ user.phone }}"></td> </tr>
-    </table>
-    <span>Note: Leave the inputs empty to keep existing value</span>
+      <button type="submit">Confirm</button>
+      <a href="/profile/discardedit"><button type="button">Discard</button></a>
+      <table>
+        <tr>
+          <th>Username:</th>
+          <td>{{ user.USERNAME }}</td>
+        </tr>
+        <tr>
+          <th>Name:</th>
+          <td><input type="text" name="name" placeholder="old: {{ user.name }}"></td>
+        </tr>
+        <tr>
+          <th>Role:</th>
+          <td>{{ user.role }} </td>
+        </tr>
+        <tr>
+          <th>Email:</th>
+          <td><input type="email" name="email" placeholder="old: {{ user.email }}"></td>
+        </tr>
+        <tr>
+          <th>Phone:</th>
+          <td><input type="tel" name="phone" placeholder="old: {{ user.phone }}"></td>
+        </tr>
+      </table>
+      <span>Note: Leave the inputs empty to keep existing value</span>
     </form>
-    
+
 
     {% elif mode=='changepassword' %}
-    
+
 
     <form action="/profile/changepasswordconfirm" method="post" id="changepassword">
       <div>
@@ -74,11 +105,11 @@
 
 
     {% endif %}
-    
+
 
     <script>
       function removeacc() {
-        if (document.getElementById('removepassword').style.display == 'none'){
+        if (document.getElementById('removepassword').style.display == 'none') {
           document.getElementById('removepassword').style.display = 'inline';
           document.getElementById('removepasswordbtn').innerText = 'Confirm Remove Account'
         }
