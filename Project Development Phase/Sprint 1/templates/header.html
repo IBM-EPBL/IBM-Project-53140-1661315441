@@ -1,0 +1,63 @@
+<header class="bg-primary fixed-top d-flex align-items-center justify-content-between pt-2 pb-2 ps-5 pe-5">
+
+  <!-- Icon -->
+  <div class="d-flex align-items-center justify-content-between pe-3">
+    <img src="{{ url_for('static', filename='logo/logo.png') }}" style="max-height: 50px;" alt="Smart Stock Logo">
+    <span class="text-white d-lg-block h3 ps-2 pe-2 m-0" style="white-space: nowrap;">Smart Stock</span>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="input-group">
+    <input type="text" class="form-control" placeholder="Search">
+    <div class="input-group-append">
+      <button class="btn btn-secondary" type="button">
+        <i class="fa-sharp fa-solid fa-magnifying-glass" style="font-size: x-large;"></i>
+      </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Nav Bar -->
+  <nav class="navbar navbar-expand-sm navbar-dark container-fluid flex justify-content-around">
+    <div class="navbar-nav">
+      <!-- Dashboard -->
+      <a class="nav-link text-white{% if request.path == '/dashboard' %} text-glow{% endif %} d-flex flex-column" href="/dashboard" data-bs-toggle="tooltip"
+        data-bs-placement="bottom" title="Dashboard">
+        <i class="fa-solid fa-gauge" style="font-size: x-large;"></i>
+      </a>
+
+      <!-- Store -->
+      <a class="nav-link text-white{% if request.path == '/store' %} text-glow{% endif %} d-flex flex-column" href="/store" data-bs-toggle="tooltip"
+        data-bs-placement="bottom" title="Store">
+        <i class="fa-solid fa-store" style="font-size: x-large;"></i>
+      </a>
+
+      <!-- Warehouse -->
+      <a class="nav-link text-white{% if request.path == '/warehouse' %} text-glow{% endif %}" href="/warehouse" data-bs-toggle="tooltip" data-bs-placement="bottom"
+        title="Warehouse">
+        <i class="fa-solid fa-warehouse" style="font-size: x-large;"></i>
+      </a>
+
+      <!-- User Management -->
+      <a class="nav-link text-white{% if request.path == '/usermanagement' %} text-glow{% endif %}" href="/usermanagement" data-bs-toggle="tooltip" data-bs-placement="bottom"
+        title="User Management">
+        <i class="fa-solid fa-users" style="font-size: x-large;"></i>
+      </a>
+    </div>
+  </nav>
+
+  {% if 'username' in session %}
+  <!-- Profile -->
+  <a class="text-white{% if request.path == '/profile' %} text-glow{% endif %}" href="/profile" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View Profile">
+    <i class="fa-solid fa-user" style="font-size: x-large;"></i>
+  </a>
+  {% else %}
+  <!-- Sign-in -->
+  <a class="text-white{% if request.path == '/signin' %} text-glow{% endif %}" href="/signin" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sign-in">
+    <i class="fa-solid fa-right-to-bracket" style="font-size: x-large;"></i>
+  </a>
+  {% endif %}
+
+</header>
+
+<div class="pt-5 pb-4"></div>

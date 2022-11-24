@@ -1,0 +1,37 @@
+<html>
+{% include "head.html" %}
+
+<body>
+  {% include "header.html" %}
+  <main class="container p-4">
+    {% if 'username' in session %}
+    <h1>You are already Signed in</h1>
+    {% else %}
+    <form class="container border border-2 w-50 ps-5 pe-5 pt-3 pb-3 mt-5" action="/signin/handle_form" method="POST">
+
+      <div class="row">
+        <div class="col p-2 h3 text-center">Sign-in:</div>
+      </div>
+
+      <div class="row p-2">
+        <label class="col h5" for="username">User Name:</label>
+        <input class="col" type="text" name="username" id="username" placeholder="username" minlength="4" required>
+      </div>
+
+      <div class="row p-2">
+        <label class="col h5" for="password">Password:</label>
+        <input class="col" type="password" name="password" id="password" placeholder="password" minlength="6" required>
+      </div>
+
+      <div class="text-center p-5">
+        <button type="submit">Sign-in</button>
+      </div>
+
+    </form>
+        
+    {% endif %}
+  </main>
+  {% include "scripts.html" %}
+</body>
+
+</html>
