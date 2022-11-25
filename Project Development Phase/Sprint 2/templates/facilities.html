@@ -90,44 +90,46 @@
     {% elif mode == 'edit' %}
     {% set f=FM.get_facility(id) %}
     <div style="width: 40vw;">
-    <h2>Edit Facility:</h2>
-    <form action="/facilities/edit/save" method="post">
-      <input type="hidden" name="id" value="{{ id }}">
-      <div class="form-outline mt-2">
-        <label class="form-label" for="name">Name:</label>
-        <input class="form-control" type="text" id="name" name="name" minlength="3" value="{{ f.name }}" placeholder="name">
-      </div>
-      <div class="form-outline mt-2">
-        <label class="form-label" for="type">Type:</label>
-        <select class="form-select" name="type" id="type">
-          {% if f.type == 'store' %}
-          <option value="store">Store</option>
-          <option value="warehouse">Warehouse</option>
-          {% else %}
-          <option value="warehouse">Warehouse</option>
-          <option value="store">Store</option>
-          {% endif %}
-        </select>
-      </div>
-      <div class="form-outline mt-2">
-        <label class="form-label" for="address">Address:</label>
-        <input class="form-control" type="text" id="address" name="address" value="{{ f.address }}" placeholder="address">
-      </div>
-      <div class="form-outline mt-2">
-        <label class="form-label" for="email">Email:</label>
-        <input class="form-control" type="email" id="email" name="email" value="{{ f.email }}" placeholder="email">
-      </div>
-      <div class="form-outline mt-2">
-        <label class="form-label" for="phone">Phone:</label>
-        <input class="form-control" type="tel" id="phone" name="phone" value="{{ f.phone }}" placeholder="phone">
-      </div>
-      <div class="form-outline mt-2">
-        <button class="btn btn-primary me-3" type="submit">Confirm</button>
-        <a href="/facilities/edit/discard"><button class="btn btn-danger" type="button">Discard</button></a>
-      </div>
-      <div class="mt-3">Note: You can also Leave the input empty to keep existing value</div>
-    </form>
-  </div>
+      <h2>Edit Facility:</h2>
+      <form action="/facilities/edit/save" method="post">
+        <input type="hidden" name="id" value="{{ id }}">
+        <div class="form-outline mt-2">
+          <label class="form-label" for="name">Name:</label>
+          <input class="form-control" type="text" id="name" name="name" minlength="3" value="{{ f.name }}"
+            placeholder="name">
+        </div>
+        <div class="form-outline mt-2">
+          <label class="form-label" for="type">Type:</label>
+          <select class="form-select" name="type" id="type">
+            {% if f.type == 'store' %}
+            <option value="store">Store</option>
+            <option value="warehouse">Warehouse</option>
+            {% else %}
+            <option value="warehouse">Warehouse</option>
+            <option value="store">Store</option>
+            {% endif %}
+          </select>
+        </div>
+        <div class="form-outline mt-2">
+          <label class="form-label" for="address">Address:</label>
+          <input class="form-control" type="text" id="address" name="address" value="{{ f.address }}"
+            placeholder="address">
+        </div>
+        <div class="form-outline mt-2">
+          <label class="form-label" for="email">Email:</label>
+          <input class="form-control" type="email" id="email" name="email" value="{{ f.email }}" placeholder="email">
+        </div>
+        <div class="form-outline mt-2">
+          <label class="form-label" for="phone">Phone:</label>
+          <input class="form-control" type="tel" id="phone" name="phone" value="{{ f.phone }}" placeholder="phone">
+        </div>
+        <div class="form-outline mt-2">
+          <button class="btn btn-primary me-3" type="submit">Confirm</button>
+          <a href="/facilities/edit/discard"><button class="btn btn-danger" type="button">Discard</button></a>
+        </div>
+        <div class="mt-3">Note: You can also Leave the input empty to keep existing value</div>
+      </form>
+    </div>
 
 
     <!-- Delete Facility -->
