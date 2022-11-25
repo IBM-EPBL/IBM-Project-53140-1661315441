@@ -159,14 +159,12 @@ def usermanagement():
 def usermanagement_mode(a):
   if a == 'newuser':
     return render_template('usermanagement.html', mode='adduser')
-  
   elif a == 'adduser':
     username, password = request.form['username'], request.form['password']
     if UM.check_username(username):
       session['message'] = 'Username Already exists'
       return render_template('usermanagement.html', mode='adduser')
     return render_template('usermanagement.html', mode='adduser2', username=username, password=password)
-  
   elif a == 'confirmadduser':
     username = request.form['username']
     password = request.form['password']
@@ -181,21 +179,15 @@ def usermanagement_mode(a):
     except Exception as e:
       session['message'] = str(e)
     return render_template('usermanagement.html', mode='add')
-  
   elif a == 'discard':
     return redirect(url_for('usermanagement'))
-  
   elif a == 'edituser':
     username = request.form['username']
     try:
-      user = UM.get_user(username)
-      return render_template('usermanagement.html', mode='edit', username=user.USERNAME, 
-                             name=user.name, role=user.role, 
-                             email=user.email, phone=user.phone)
+      return render_template('usermanagement.html', mode='edit', username=username)
     except Exception as e:
       session['message'] = str(e)
     return redirect(url_for('usermanagement'))
-  
   elif a == 'edituserconfirm':
     username = request.form['username']
     name = request.form['name']
@@ -211,13 +203,10 @@ def usermanagement_mode(a):
       return render_template('usermanagement.html', mode='edit', username=user.USERNAME, 
                              name=user.name, role=user.role, 
                              email=user.email, phone=user.phone)
-    
-
   elif a == 'removeuser':
     username = request.form['username']
     UM.remove_user(username)
     return redirect(url_for('usermanagement'))
-
   else:
     return render_template('404.html')
 
@@ -234,19 +223,8 @@ def profile_mode(a):
     return render_template('profile.html', mode='edit')
   elif a == 'changepassword':
     return render_template('profile.html', mode='changepassword')
-  elif a == 'removeuser':
-    try:
-      password = request.form['password']
-      if not UM.check_user(session['username'], password):
-        session['message'] = 'Password Incorrect'
-        return redirect(url_for('profile'))
-      UM.remove_user(session['username'])
-      session.pop('username', None)
-      session['message'] = 'User Removed Successfully'
-      return redirect(url_for('signin'))
-    except Exception as e:
-      session['message'] = str(e)
-      return redirect(url_for('profile'))
+  elif a == 'remove':
+    return render_template('profile.html', mode='remove')
   elif a == 'signout':
     try:
       session.pop('username', None)
@@ -280,6 +258,19 @@ def profile_action(a, b):
         session['message'] = 'Password Changed Successfully'
       except Exception as e:
         session['message'] = str(e)
+      return redirect(url_for('profile'))
+    elif a == 'remove':
+      try:
+      password = request.form['password']
+      if not UM.check_user(session['username'], password):
+        session['message'] = 'Password Incorrect'
+        return redirect(url_for('profile'))
+      UM.remove_user(session['username'])
+      session.pop('username', None)
+      session['message'] = 'User Removed Successfully'
+      return redirect(url_for('signin'))
+    except Exception as e:
+      session['message'] = str(e)
       return redirect(url_for('profile'))
     else:
       return render_template('404.html')
