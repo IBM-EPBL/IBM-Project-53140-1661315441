@@ -96,9 +96,9 @@ def stock_action(a, b):
       type = request.form['type']
       price = request.form['price']
       quantity = request.form['quantity']
-      lowvalue = request.form['lowvalue']
+      minvalue = request.form['minvalue']
       facility = request.form['facility']
-      SM.add_item(name, type, price, quantity, lowvalue, facility)
+      SM.add_item(name, type, price, quantity, minvalue, facility)
       return redirect(url_for('stock'))
     elif a == 'edit':
       id = request.form['id']
@@ -106,9 +106,9 @@ def stock_action(a, b):
       type = request.form['type']
       price = request.form['price']
       quantity = request.form['quantity']
-      lowvalue = request.form['lowvalue']
+      minvalue = request.form['minvalue']
       facility = request.form['facility']
-      SM.edit_item(id, name, type, price, quantity, lowvalue, facility)
+      SM.edit_item(id, name, type, price, quantity, minvalue, facility)
       return redirect(url_for('stock'))
     elif a == 'delete':
       id = request.form['id']

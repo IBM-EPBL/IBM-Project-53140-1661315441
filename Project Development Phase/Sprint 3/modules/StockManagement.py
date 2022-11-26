@@ -1,15 +1,15 @@
 class Stock:
-  def __init__(self, DB, id, name, type, price, quantity, lowvalue, facility, new=False):
+  def __init__(self, DB, id, name, type, price, quantity, minvalue, facility, new=False):
     self.DB = DB
     self.id = str(id)
     self.name = str(name)
     self.type = str(type)
     self.price = str(price)
     self.quantity = str(quantity)
-    self.lowvalue = str(lowvalue)
+    self.minvalue = str(minvalue)
     self.facility = str(facility)
     if new:
-      self.id = str(self.DB.add_item(self.name, self.type, self.price, self.quantity, self.lowvalue, self.facility))
+      self.id = str(self.DB.add_item(self.name, self.type, self.price, self.quantity, self.minvalue, self.facility))
     
   def pull(self):
     d = self.DB.get_item(self.id)
@@ -18,11 +18,11 @@ class Stock:
     self.type = d['type']
     self.price = d['price']
     self.quantity = d['quantity']
-    self.lowvalue = d['lowvalue']
+    self.minvalue = d['minvalue']
     self.facility = d['facility']
   
   def push(self):
-    self.DB.update_item(self.id, self.name, self.type, self.price, self.quantity, self.lowvalue, self.facility)
+    self.DB.update_item(self.id, self.name, self.type, self.price, self.quantity, self.minvalue, self.facility)
   
   def remove(self):
     self.DB.remove_item(self.id)
@@ -39,12 +39,12 @@ class StockManagement:
   def pull(self):
     s = []
     for i in self.DB.get_items():
-      s.append(Stock(self.DB, i['id'], i['name'], i['type'], i['price'], i['quantity'], i['lowvalue'], i['facility']))
+      s.append(Stock(self.DB, i['id'], i['name'], i['type'], i['price'], i['quantity'], i['minvalue'], i['facility']))
     self.s = s
     
   
-  def add_item(self, name, type, price, quantity, lowvalue, facility):
-    self.s.append(Stock(self.DB, len(self.s), name, type, price, quantity, lowvalue, facility, new=True))
+  def add_item(self, name, type, price, quantity, minvalue, facility):
+    self.s.append(Stock(self.DB, len(self.s), name, type, price, quantity, minvalue, facility, new=True))
   
   
   def get_item(self, id):
@@ -89,14 +89,14 @@ class StockManagement:
       raise Exception('Invalid sortby')
   
   
-  def edit_item(self, id, name, type, price, quantity, lowvalue, facility):
+  def edit_item(self, id, name, type, price, quantity, minvalue, facility):
     for i in self.s:
       if i.id == id:
         if name: i.name = name
         if type: i.type = type
         if price: i.price = price
         if quantity: i.quantity = quantity
-        if lowvalue: i.lowvalue = lowvalue
+        if minvalue: i.minvalue = minvalue
         if facility: i.facility = facility
         i.push()
         return
@@ -121,10 +121,10 @@ class StockManagement:
     raise Exception('Item not found')
   
   
-  def check_lowvalue(self, id):
+  def check_minvalue(self, id):
     for i in self.s:
       if i.id == id:
-        if i.quantity <= i.lowvalue:
+        if i.quantity <= i.minvalue:
           return True
         else:
           return False
