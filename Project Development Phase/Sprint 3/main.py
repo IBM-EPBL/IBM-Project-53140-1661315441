@@ -29,6 +29,8 @@ SM = StockManagement(DB)
 # Root URL
 @app.route('/')
 def index():
+  if 'username' in session:
+    return redirect(url_for('dashboard'))
   session['page'] = 'dashboard'
   return render_template('home.html')
 
@@ -349,4 +351,4 @@ def inject_data():
 
 if __name__ == '__main__':
   app.config['SECRET_KEY'] = '123456789'
-  app.run(debug=True, port=5005)
+  app.run(debug=True, port=5050)
