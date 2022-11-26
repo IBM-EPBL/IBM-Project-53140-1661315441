@@ -21,13 +21,16 @@ SM = StockManagement(DB)
 # page - The page the user is currently on
 # message - The message to display to the user
 # username - The username of the user
+# sort - The column to sort the table by
+# filter - The filter to apply to the table
 
 
 
 # Root URL
 @app.route('/')
 def index():
-  return redirect(url_for('dashboard'))
+  session['page'] = 'dashboard'
+  return render_template('home.html')
 
 
 # Dashboard - Page
@@ -43,11 +46,17 @@ def dashboard():
 @app.route('/stock')
 def stock():
   session['page'] = 'stock'
+  if 'sort' not in session:
+    session['sort'] = 'id'
+  if 'sortorder' not in session:
+    session['sortorder'] = 'asc'
   return render_template('stock.html', mode='view')
 
 @app.route('/stock/<a>', methods=['GET', 'POST'])
 def stock_mode(a):
-  if a == 'add':
+  if a == 'view':
+    return render_template('stock.html', mode='view')
+  elif a == 'add':
     return render_template('stock.html', mode='add')
   elif a == 'update':
     id = request.form['id']
@@ -65,6 +74,15 @@ def stock_mode(a):
 
 @app.route('/stock/<a>/<b>', methods=['GET', 'POST'])
 def stock_action(a, b):
+  if a == 'view':
+    SORTBY = ('id', 'name', 'type', 'price', 'quantity', 'facility')
+    if b in SORTBY:
+      session['sort'] = b
+    elif b in ('asc', 'desc'):
+      session['sortorder'] = b
+    else:
+      return render_template('404.html')
+    return redirect(url_for('stock'))
   if b == 'discard':
     return redirect(url_for('stock'))
   elif b == 'save':
