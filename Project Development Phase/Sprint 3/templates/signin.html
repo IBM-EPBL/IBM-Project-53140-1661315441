@@ -1,0 +1,54 @@
+<html>
+
+<head>{% include "head.html" %}</head>
+
+<body>
+  {% include "header.html" %}
+  <main class="container p-4">
+    {% if 'username' in session %}
+    <div class="container d-flex flex-column justify-content-center">
+      <h1 class="text-center">You are already Signed in</h1>
+      <div class="text-center">
+        <a class="btn btn-primary" href="/dashboard">Dashboard</a>
+      </div>
+    </div>
+    {% else %}
+
+    <div class="container d-flex" style="width: fit-content;">
+      <img src="{{ url_for('static', filename='img/login.jpg') }}" class="m-5" style="width: 30vw"
+        alt="Login Illustration">
+
+      <form class="m-5" action="/signin/handle_form" method="POST">
+
+        <div class="form-outline m-4">
+          <div class="col p-2 h3 text-center">Sign-in:</div>
+        </div>
+
+        <!-- Username Input -->
+        <div class="form-outline mb-4">
+          <label class="form-label" for="username">User Name:</label>
+          <input class="form-control" type="text" name="username" id="username" placeholder="username" minlength="3"
+            required>
+        </div>
+
+        <!-- Passoword Input -->
+        <div class="form-outline mb-4">
+          <label class="form-label" for="password">Password:</label>
+          <input class="form-control" type="password" name="password" id="password" placeholder="password" minlength="4"
+            required>
+        </div>
+
+        <!-- Sign-in Button -->
+        <div class="form-outline mb-4 text-center">
+          <button class="btn btn-primary btn-block mb-4" type="submit">Sign-in</button>
+        </div>
+
+      </form>
+    </div>
+
+    {% endif %}
+  </main>
+  {% include "scripts.html" %}
+</body>
+
+</html>
