@@ -1,0 +1,149 @@
+<html>
+{% include "head.html" %}
+
+<body>
+  {% include "header.html" %}
+  <main class="container p-4">
+    
+    <!-- View Facility -->
+    {% if mode == 'view' %}
+    <h1>Facilities</h1>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Address</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Action</th>
+      </tr>
+      {% for i in FM.get_facilities() %}
+        <tr>
+          <td>{{ i.id }}</td>
+          <td>{{ i.name }}</td>
+          <td>{{ i.type }}</td>
+          <td>{{ i.address }}</td>
+          <td>{{ i.email }}</td>
+          <td>{{ i.phone }}</td>
+          <td>
+            <form action="/facilities/edit" method="post">
+              <input type="hidden" name="id" value="{{ i.id }}">
+              <button type="submit">Edit</button>
+            </form>
+          </td>
+          <td>
+            <form action="/facilities/delete" method="post">
+              <input type="hidden" name="id" value="{{ i.id }}">
+              <button type="submit">Remove</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+    <a href="/facilities/add"><button type="button">Add</button></a>
+
+
+
+    {% elif mode == 'add' %}
+    <!-- Add Facility -->
+    <h1>Add Facilities</h1>
+    <form action="/facilities/add/save" method="post">
+      <input type="hidden" name="id" value="{{ id }}">
+      <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" minlength="3" placeholder="name" required>
+      </div>
+      <div>
+        <label for="type">Type:</label>
+        <select name="type" id="type">
+          <option value="store">Store</option>
+          <option value="warehouse">Warehouse</option>
+        </select>
+      </div>
+      <div>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" placeholder="address" required>
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="email" required>
+      </div>
+      <div>
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" placeholder="phone" required>
+      </div>
+      <div>
+        <button type="submit">Confirm</button>
+        <a href="/facilities/add/discard"><button type="button">Discard</button></a>
+      </div>
+    </form>
+
+
+    <!-- Edit Facility -->
+    {% elif mode == 'edit' %}
+    {% set f=FM.get_facility(id) %}
+    <h1>Edit Facility</h1>
+    <form action="/facilities/edit/save" method="post">
+      <input type="hidden" name="id" value="{{ id }}">
+      <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" minlength="3" placeholder="name">
+        Current Name: {{ f.name }}
+      </div>
+      <div>
+        <label for="type">Type:</label>
+        <select name="type" id="type">
+          <option value="store">Store</option>
+          <option value="warehouse">Warehouse</option>
+        </select>
+        Current Type: {{ f.type }}
+      </div>
+      <div>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" placeholder="address">
+        Current Address: {{ f.address }}
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="email">
+        Current Email: {{ f.email }}
+      </div>
+      <div>
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" placeholder="phone">
+        Current Phone: {{ f.phone }}
+      </div>
+      <div>
+        <button type="submit">Confirm</button>
+        <a href="/facilities/edit/discard"><button type="button">Discard</button></a>
+      </div>
+    </form>
+
+
+    <!-- Delete Facility -->
+    {% elif mode == 'delete' %}
+    {% set i=FM.get_facility(id) %}
+    <h1>Confirm Delete Facility:</h1>
+    <br> ID: {{ i.id }}
+    <br> Name: {{ i.name }}
+    <br> Type: {{ i.type }}
+    <br> Address: {{ i.address }}
+    <br> Email: {{ i.email }}
+    <br> Phone: {{ i.phone }}
+    <form action="/facilities/delete/save" method="post">
+      <input type="hidden" name="id" value="{{ i.id }}">
+      <button type="submit">Confirm Remove</button>
+    </form>
+    
+
+
+    <!-- Invalid URL -->
+    {% else %}
+      <h1>Invalid Mode</h1>
+    {% endif %}
+  </main>
+  {% include "scripts.html" %}
+</body>
+
+</html>
