@@ -77,4 +77,48 @@ class DBManager():
 
 
     # facility - id(auto), name(30), type(20), address(100), email(320), phone(15)
+    def add_facility(self, name, type, address, email, phone):
+        sql = f"""insert into facility (name,type,address,email,phone)
+                    values ('{name}','{type}','{address}','{email}','{phone}');"""
+        ibm_db.exec_immediate(self.conn, sql)
+        sql = f"select id from facility where name='{name}' and type='{type}' and address='{address}' and email='{email}' and phone='{phone}';"
+        if i:=ibm_db.fetch_both(ibm_db.exec_immediate(self.conn, sql)):
+            return i['ID']
+        raise Exception("Unable to add facility")
+
+    def get_facility(self, id):
+        sql = f"select id,name,type,address,email,phone from facility where id={id};"
+        if i:=ibm_db.fetch_both(ibm_db.exec_immediate(self.conn, sql)):
+            return {'id':i['ID'],'name':i['NAME'],'type':i['TYPE'],
+                    'address':i['ADDRESS'],'email':i['EMAIL'],'phone':i['PHONE']}
+        raise Exception("Invalid Facility ID")
+
+    def get_facilities(self):
+        sql = f"select id,name,type,address,email,phone from facility;"
+        d = ibm_db.exec_immediate(self.conn, sql)
+        while i:=ibm_db.fetch_both(d):
+            yield {'id':i['ID'],'name':i['NAME'],'type':i['TYPE'],
+                   'address':i['ADDRESS'],'email':i['EMAIL'],'phone':i['PHONE']}
+
+    def update_facility(self, id, newname, newtype, newaddress, newemail, newphone):
+        if not self.check_facility(id):
+            raise Exception("Invalid Facility ID")
+        sql = f"""update facility set (name,type,address,email,phone) = 
+                  ('{newname}','{newtype}','{newaddress}','{newemail}','{newphone}')
+                  where id={id};"""
+        ibm_db.exec_immediate(self.conn, sql)
+
+    def remove_facility(self, id):
+        if not self.check_facility(id):
+            raise Exception("Invalid Facility ID")
+        sql = f"delete from facility where id={id};"
+        ibm_db.exec_immediate(self.conn, sql)
+
+    def check_facility(self, id):
+        sql = f"select id from facility where id={id};"
+        return True if ibm_db.fetch_both(ibm_db.exec_immediate(self.conn, sql)) else False
+
+
+
+
     # stock - id(auto), name(30), type(20)(Grocery, Home Appliances, Stationary, Uncategorised), price(10,2), quantity, facility
