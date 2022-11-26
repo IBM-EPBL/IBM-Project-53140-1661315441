@@ -60,7 +60,6 @@ class UserManagement:
     
   
   def get_user(self, username):
-    print("get_user:", username)
     for i in self.users:
       if i.USERNAME == username:
         return i
@@ -113,9 +112,7 @@ class UserManagement:
   def remove_user(self, username):
     for i in self.users:
       if i.USERNAME == username:
-        print(1)
         i.remove()
-        print(2)
         self.users.remove(i)
         return
     raise Exception('User Not Found')
