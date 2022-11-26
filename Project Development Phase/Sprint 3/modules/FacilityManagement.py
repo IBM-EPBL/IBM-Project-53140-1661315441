@@ -1,14 +1,14 @@
 class Facility:
   def __init__(self, DB, id, name, type, address, email, phone, new=False):
     self.DB = DB
-    self.id = id
-    self.name = name
-    self.type = type
-    self.address = address
-    self.email = email
-    self.phone = phone
+    self.id = str(id)
+    self.name = str(name)
+    self.type = str(type)
+    self.address = str(address)
+    self.email = str(email)
+    self.phone = str(phone)
     if new:
-      self.id = self.DB.add_facility(self.name, self.type, self.address, self.email, self.phone)
+      self.id = str(self.DB.add_facility(self.name, self.type, self.address, self.email, self.phone))
   
   def pull(self):
     d = self.DB.get_facility(self.id)
@@ -42,11 +42,12 @@ class FacilityManagement:
   
   
   def add_facility(self, name, type, address, email, phone):
-    self.f.append(Facility(self.DB, len(self.f), name, type, address, email, phone, new=True))
+    self.f.append(Facility(self.DB, '-1', name, type, address, email, phone, new=True))
   
   
   def get_facility(self, id):
     for i in self.f:
+      print(type(i.id), type(id))
       if i.id == id:
         return i
     raise Exception('Facility not found')
