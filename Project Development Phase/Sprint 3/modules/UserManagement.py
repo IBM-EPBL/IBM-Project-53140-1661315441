@@ -1,5 +1,5 @@
-USERPRIVILEGES = {'superadmin':-1, 'admin':0, 'user':1, 'visitor':2}
-
+from modules.Constants import Constants
+CON = Constants()
 
 class User:
   def __init__(self, DB, USERNAME, PASSWORD, name, role, email, phone, new = False):
@@ -27,7 +27,7 @@ class User:
   
   
   def privilege(self):
-    return USERPRIVILEGES[self.role]
+    return CON.USERPRIVILEGES[self.role]
   
   
   def change_role(self, newrole):

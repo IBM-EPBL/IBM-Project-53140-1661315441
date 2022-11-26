@@ -103,12 +103,9 @@
           <label class="form-label" for="type">Type: </label>
           <select class="form-select" name="type" id="type" required>
             <option value="">--Select Type--</option>
-            <option value="uncategorised">Uncategorised</option>
-            <option value="grocery">Groceries</option>
-            <option value="homeappliance">Home Appliances</option>
-            <option value="stationary">Stationaries</option>
-            <option value="electronics">Electronics</option>
-            <option value="other">Other</option>
+            {% for i in CON.CATEGORIES %}
+            <option value="{{i}}">{{i.capitalize()}}</option>
+            {% endfor %}
           </select>
         </div>
         <div class="form-outline mt-3">
@@ -155,13 +152,12 @@
       <div class="form-outline mt-3">
         <label class="form-label" for="type">Type:</label>
         <select class="form-select" name="type" id="type">
-          {% set l = ['uncategorised','grocery','homeappliance','stationary','electronics','other'] %}
-          {% for j in l %}
+          {% for j in CON.CATEGORIES %}
           {% if j == i.type %}
           <option value="{{j}}">{{j.capitalize()}}</option>
           {% endif %}
           {% endfor %}
-          {% for j in l %}
+          {% for j in CON.CATEGORIES %}
           {% if j != i.type %}
           <option value="{{j}}">{{j.capitalize()}}</option>
           {% endif %}

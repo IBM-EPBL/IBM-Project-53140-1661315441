@@ -4,6 +4,7 @@ from modules.DBManagerProxy import DBManagerProxy
 from modules.UserManagement import UserManagement
 from modules.FacilityManagement import FacilityManagement
 from modules.StockManagement import StockManagement
+from modules.Constants import Constants
 from modules.SendgridAPI import SendgridAPI
 
 app = Flask(__name__)
@@ -16,6 +17,7 @@ DB = DBManager(dsn_hostname, dsn_port, dsn_uid, dsn_pwd)
 UM = UserManagement(DB)
 FM = FacilityManagement(DB)
 SM = StockManagement(DB)
+CON = Constants()
 SG = SendgridAPI()
 
 
@@ -73,14 +75,13 @@ def stock_mode(a):
   elif a == 'delete':
     id = request.form['id']
     return render_template('stock.html', mode='delete', id=id)
-  else:
+  else:USERPRIVILEGES
     return render_template('404.html')
 
 @app.route('/stock/<a>/<b>', methods=['GET', 'POST'])
 def stock_action(a, b):
   if a == 'view':
-    SORTBY = ('id', 'name', 'type', 'price', 'quantity', 'facility')
-    if b in SORTBY:
+    if b in CON.SORTBY:
       session['sort'] = b
     elif b in ('asc', 'desc'):
       session['sortorder'] = b
@@ -349,7 +350,7 @@ def page_not_found(e):
 
 @app.context_processor
 def inject_data():
-  return dict(UM=UM, FM=FM, SM=SM)
+  return dict(UM=UM, FM=FM, SM=SM, CON=CON)
 
 
 
