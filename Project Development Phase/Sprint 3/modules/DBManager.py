@@ -121,35 +121,35 @@ class DBManager():
 
 
 
-    # stock - id(auto), name(30), type(20)(Grocery, Home Appliances, Stationary, Uncategorised), price(10,2), quantity, facility
-    def add_item(self, name, type, price, quantity, facility):
-        sql = f"""insert into stock (name,type,price,quantity,facility)
-                    values ('{name}','{type}',{price},{quantity},{facility});"""
+    # stock - id(auto), name(30), type(20)(Grocery, Home Appliances, Stationary, Uncategorised), price(10,2), quantity, minvalue, facility
+    def add_item(self, name, type, price, quantity, minvalue, facility):
+        sql = f"""insert into stock (name,type,price,quantity,minvalue,facility)
+                    values ('{name}','{type}',{price},{quantity},{minvalue},{facility});"""
         ibm_db.exec_immediate(self.conn, sql)
-        sql = f"select id from stock where name='{name}' and type='{type}' and price={price} and quantity={quantity} and facility={facility};"
+        sql = f"select id from stock where name='{name}' and type='{type}' and price={price} and quantity={quantity} and minvalue={minvalue} and facility={facility};"
         if i:=ibm_db.fetch_both(ibm_db.exec_immediate(self.conn, sql)):
             return i['ID']
         raise Exception("Unable to add item")
 
     def get_item(self, id):
-        sql = f"select id,name,type,price,quantity,facility from stock where id={id};"
+        sql = f"select id,name,type,price,quantity,minvalue,facility from stock where id={id};"
         if i:=ibm_db.fetch_both(ibm_db.exec_immediate(self.conn, sql)):
-            return {'id':i['ID'],'name':i['NAME'],'type':i['TYPE'],
-                    'price':i['PRICE'],'quantity':i['QUANTITY'],'facility':i['FACILITY']}
+            return {'id':i['ID'],'name':i['NAME'],'type':i['TYPE'],'price':i['PRICE'],
+                    'quantity':i['QUANTITY'],'minvalue':i['MINVALUE'],'facility':i['FACILITY']}
         raise Exception("Invalid Item ID")
 
     def get_items(self):
-        sql = f"select id,name,type,price,quantity,facility from stock;"
+        sql = f"select id,name,type,price,quantity,minvalue,facility from stock;"
         d = ibm_db.exec_immediate(self.conn, sql)
         while i:=ibm_db.fetch_both(d):
-            yield {'id':i['ID'],'name':i['NAME'],'type':i['TYPE'],
-                   'price':i['PRICE'],'quantity':i['QUANTITY'],'facility':i['FACILITY']}
+            yield {'id':i['ID'],'name':i['NAME'],'type':i['TYPE'],'price':i['PRICE'],
+                   'quantity':i['QUANTITY'],'minvalue':i['MINVALUE'],'facility':i['FACILITY']}
 
-    def update_item(self, id, newname, newtype, newprice, newquantity, newfacility):
+    def update_item(self, id, newname, newtype, newprice, newquantity, newminvalue, newfacility):
         if not self.check_item(id):
             raise Exception("Invalid Item ID")
-        sql = f"""update stock set (name,type,price,quantity,facility) = 
-                  ('{newname}','{newtype}',{newprice},{newquantity},{newfacility})
+        sql = f"""update stock set (name,type,price,quantity,minvalue,facility) = 
+                  ('{newname}','{newtype}',{newprice},{newquantity},{newminvalue},{newfacility})
                   where id={id};"""
         ibm_db.exec_immediate(self.conn, sql)
 
