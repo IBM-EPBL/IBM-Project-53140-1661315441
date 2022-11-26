@@ -1,10 +1,11 @@
+import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
 
 class SendGridAPI:
     def __init__(self):
-        self.sg = SendGridAPIClient('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')
+        self.sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
 
     def send(self, to_email, subject, content):
         message = Mail(from_email='smartstockoffi@gmail.com',
