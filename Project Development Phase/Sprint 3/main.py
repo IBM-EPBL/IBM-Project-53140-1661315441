@@ -4,6 +4,7 @@ from modules.DBManagerProxy import DBManagerProxy
 from modules.UserManagement import UserManagement
 from modules.FacilityManagement import FacilityManagement
 from modules.StockManagement import StockManagement
+from modules.SendgridAPI import SendgridAPI
 
 app = Flask(__name__)
 dsn_hostname = "6667d8e9-9d4d-4ccb-ba32-21da3bb5aafc.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud"
@@ -15,6 +16,7 @@ DB = DBManager(dsn_hostname, dsn_port, dsn_uid, dsn_pwd)
 UM = UserManagement(DB)
 FM = FacilityManagement(DB)
 SM = StockManagement(DB)
+SG = SendgridAPI()
 
 
 # Session Variables:
