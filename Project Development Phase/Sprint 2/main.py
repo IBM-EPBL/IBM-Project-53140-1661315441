@@ -128,8 +128,6 @@ def facilities_mode(a):
     return render_template('facilities.html', mode='add')
   elif a == 'edit':
     id = request.form['id']
-    print('\n\n\n')
-    print('id:',id)
     return render_template('facilities.html', mode='edit', id=id)
   elif a == 'delete':
     id = request.form['id']
