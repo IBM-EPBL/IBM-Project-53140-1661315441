@@ -162,14 +162,29 @@ class DBManager():
 
 
 
-    # log - id(auto), facility, item, quantity, time(auto)
-    def add_log(self, facility, item, quantity):
-        sql = f"""insert into log (facility,item,quantity)
-                    values ({facility},{item},{quantity});"""
+    # log - id(auto), facility, item, quantity, action, timestamp(auto)
+    def add_log(self, facility, item, quantity, action):
+        sql = f"""insert into log (facility,item,quantity,action)
+                    values ({facility},{item},{quantity},'{action}');"""
         ibm_db.exec_immediate(self.conn, sql)
-    
+
     def get_logs(self):
-        sql = f"select id,facility,item,quantity,time from log;"
+        sql = f"select id,facility,item,quantity,action,timestamp from log;"
         d = ibm_db.exec_immediate(self.conn, sql)
         while i:=ibm_db.fetch_both(d):
-            yield {'id':i['ID'],'facility':i['FACILITY'],'item':i['ITEM'],'quantity':i['QUANTITY'],'time':i['TIME']}
+            yield {'id':i['ID'],'facility':i['FACILITY'],'item':i['ITEM'],
+                   'quantity':i['QUANTITY'],'action':i['ACTION'],'timestamp':i['TIMESTAMP']}
+
+    def get_top_items(self, limit):
+        sql = f"""select item, sum(quantity) as total from log group by item order by total desc limit {limit};"""
+        d = ibm_db.exec_immediate(self.conn, sql)
+        while i:=ibm_db.fetch_both(d):
+            yield {'item':i['ITEM'],'total':i['TOTAL']}
+        
+
+    def get_today_logs(self):
+        sql = f"select id,facility,item,quantity,action,timestamp from log where timestamp >= current date;"
+        d = ibm_db.exec_immediate(self.conn, sql)
+        while i:=ibm_db.fetch_both(d):
+            yield {'id':i['ID'],'facility':i['FACILITY'],'item':i['ITEM'],
+                   'quantity':i['QUANTITY'],'action':i['ACTION'],'timestamp':i['TIMESTAMP']}
