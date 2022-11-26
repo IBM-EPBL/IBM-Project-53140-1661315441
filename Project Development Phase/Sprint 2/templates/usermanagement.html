@@ -18,16 +18,19 @@
     {% if mode=='view' %}
 
 
-    <h1>User Management:</h1>
-    <table>
-      <tr>
+    <div class="d-flex justify-content-between">
+      <h2>User Management:</h2>
+      <a href="/usermanagement/newuser"><button class="btn btn-primary">Add User</button></a>
+    </div>
+    <table class="table table-striped">
+      <thead class="table-dark">
         <th>Username</th>
         <th>Name</th>
         <th>Role</th>
         <th>Email</th>
         <th>Phone</th>
         <th>Actions</th>
-      </tr>
+      </thead>
       {% for i in UM.get_users() %}
       <tr>
         <td>{{ i.USERNAME }}</td>
@@ -36,139 +39,188 @@
         <td>{{ i.email }}</td>
         <td>{{ i.phone }}</td>
         {% if i.privilege() > user.privilege() %}
-        <td>
+        <td class="container d-flex">
           <form action="/usermanagement/edituser" method="post">
             <input type="hidden" name="username" value="{{ i.USERNAME }}">
-            <button type="submit">Edit</button>
+            <button class="btn btn-primary" type="submit">Edit</button>
           </form>
-        </td>
-        <td>
           <form action="/usermanagement/removeuser" method="post">
             <input type="hidden" name="username" value="{{ i.USERNAME }}">
-            <button type="submit">Remove</button>
+            <button class="btn btn-danger" type="submit">Remove</button>
           </form>
+        </td>
+        {% else %}
+        <td class="container d-flex">
+          <button class="btn btn-primary" disabled>Edit</button>
+          <button class="btn btn-danger" disabled>Remove</button>
         </td>
         {% endif %}
       </tr>
       {% endfor %}
       </tr>
     </table>
-    <a href="/usermanagement/newuser"><button type="button">Add User</button></a>
 
 
-    {% elif mode=='adduser' %}
 
+    {% elif mode=='adduser' or mode=='adduser2' %}
+    <div class="container">
+      <h2 class="p-2">Create New User:</h2>
+      <div class="row">
+        <div class="col card me-5" style="min-width: 30vw;">
+          <form action="/usermanagement/adduser" method="post" id="adduser">
+            <fieldset{% if mode=='adduser2' %} disabled{% endif %}>
+              <div class="form-outline m-4">
+                <label class="form-label" for="username">Username:</label>
+                <input class="form-control" id="username" type="text" name="username" minlength="3"
+                  placeholder="username" {% if mode=='adduser2' %}value="{{ username }}" {% endif %}required>
+              </div>
+              <div class="form-outline m-4">
+                <label class="form-label" for="password">Password:</label>
+                <input class="form-control" id="password" type="password" name="password" minlength="4"
+                  placeholder="password" {% if mode=='adduser2' %}value="{{ password }}" {%
+                  endif%}onchange="onChangePassword()" required>
+              </div>
+              <div class="form-outline m-4">
+                <label class="form-label" for="confirmpassword">Confirm Password:</label>
+                <input class="form-control" id="confirmpassword" type="password" name="confirmpassword" minlength="4"
+                  placeholder="confirm password" {% if mode=='adduser2' %}value="{{ password }}"
+                  {%endif%}onchange="onChangePassword()" required>
+                <div id="passwordMessageBlock" class="form-text"></div>
+              </div>
+              <div class="form-outline m-4">
+                <button class="btn btn-primary me-3" type="submit">Confirm</button>
+                <a href="/usermanagement/discard"><button class="btn btn-warning" type="button">Discard</button></a>
+              </div>
+              </fieldset>
+          </form>
+        </div>
 
-    <h1>Create New User:</h1>
-    <form action="/usermanagement/adduser" method="post" id="adduser">
-      <table>
-        <tr>
-          <th><label for="username">Username</label></th>
-          <td><input id="username" type="text" name="username" minlength="3" placeholder="username" required></td>
-        </tr>
-        <tr>
-          <th><label for="password">Password</label></th>
-          <td><input id="password" type="password" name="password" minlength="4" placeholder="password" required></td>
-        </tr>
-        <tr>
-          <th><label for="confirmpassword">Confirm Password</label></th>
-          <td><input id="confirmpassword" type="password" name="confirmpassword" minlength="4"
-              placeholder="confirm password" required></td>
-        </tr>
-      </table>
-      <button type="button" onclick="check()">Confirm</button>
-      <a href="/usermanagement/discard"><button type="button">Discard</button></a>
-    </form>
-
+        <div class="col card ms-5">
+          <form action="/usermanagement/confirmadduser" method="post">
+            <fieldset{% if mode!='adduser2' %} disabled{% endif %}>
+              <input type="hidden" name="username" value="{{ username }}">
+              <input type="hidden" name="password" value="{{ password }}">
+              <div class="form-outline m-4">
+                <label class="form-label" for="name">Name:</label>
+                <input class="form-control" id="name" type="text" name="name" placeholder="name" required>
+              </div>
+              <div class="form-outline m-4">
+                <label class="form-label" for="role">Role:</label>
+                <select class="form-select" name="role" id="role" required>
+                  <option value="">--Select Role--</option>
+                  <option value="user">Standard User</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              <div class="form-outline m-4">
+                <label class="form-label" for="email">Email:</label>
+                <input class="form-control" id="email" type="email" name="email" placeholder="email" required>
+              </div>
+              <div class="form-outline m-4">
+                <label class="form-label" for="phone">Phone:</label>
+                <input class="form-control" id="phone" type="tel" name="phone" placeholder="phone" required>
+              </div>
+              <div class="form-outline m-4">
+                <button class="btn btn-primary" type="submit">Confirm</button>
+                <a href="/usermanagement/discard"><button class="btn btn-warning" type="button">Discard</button></a>
+              </div>
+              </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+    </div>
     <script>
-      function check() {
-        if (document.getElementById('password').value != document.getElementById('confirmpassword').value)
-          alert("Both Passwords do not Match");
+      function onChangePassword() {
+        const password = document.querySelector('input[name=password]');
+        const confirm = document.querySelector('input[name=confirmpassword]');
+        if (confirm.value === password.value)
+          confirm.setCustomValidity('');
         else
-          document.getElementById('adduser').submit();
+          confirm.setCustomValidity('Passwords do not match');
       }
     </script>
 
 
-    {% elif mode=='adduser2' %}
-
-
-    <h1>Create New User:</h1>
-    <table>
-      <tr>
-        <th>Username</th>
-        <td>{{ username }}</td>
-      </tr>
-    </table>
-    <form action="/usermanagement/confirmadduser" method="post">
-      <input type="hidden" name="username" value="{{ username }}">
-      <input type="hidden" name="password" value="{{ password }}">
-      <table>
-        <tr>
-          <th><label for="role">Role</label></th>
-          <td>
-            <select name="role" id="role">
-              <option value="user">Standard User</option>
-              <option value="admin">Admin</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <th><label for="email">Email</label></th>
-          <td><input id="email" type="email" name="email" placeholder="email" required></td>
-        </tr>
-        <tr>
-          <th><label for="phone">Phone</label></th>
-          <td><input id="phone" type="tel" name="phone" placeholder="phone" required></td>
-        </tr>
-      </table>
-      <button type="submit">Confirm</button>
-      <a href="/usermanagement/discard"><button type="button">Discard</button></a>
-    </form>
-
 
     {% elif mode=='edit' %}
-
-
-    <h1>Edit User:</h1>
-    <form action="/usermanagement/edituserconfirm" method="post">
-      <input type="hidden" name="username" value="{{ username }}">
-      <table>
-        <tr>
-          <th><label>Username</label></th>
-          <td>{{ username }}</td>
-        </tr>
-        <tr>
-          <th><label for="name">Name</label></th>
-          <td><input type="text" id="name" name="name" placeholder="name"></td>
-          <td>Current Name: {{ name }}</td>
-        </tr>
-        <tr>
-          <th><label for="role">Role</label></th>
-          <td>
-            <select name="role" id="role">
-              <option value="user">Standard User</option>
-              <option value="admin">Admin</option>
-            </select>
-          </td>
-          <td>Current Role: {{ role }}</td>
-        </tr>
-        <tr>
-          <th><label for="email">Email</label></th>
-          <td><input id="email" type="email" name="email" placeholder="email"></td>
-          <td>Current Email: {{ email }}</td>
-        </tr>
-        <tr>
-          <th><label for="phone">Phone</label></th>
-          <td><input id="phone" type="tel" name="phone" placeholder="phone"></td>
-          <td>Current Phone: {{ phone }}</td>
-        </tr>
-      </table>
-      <span>Note: Leave the inputs empty to keep existing value</span>
-      <button type="submit">Confirm</button>
-      <a href="/usermanagement/discard"><button type="button">Discard</button></a>
+    {% set i = UM.get_user(username) %}
+    <form class="container d-flex m-3" action="/usermanagement/edituserconfirm" method="post">
+      <div class="col-md-8">
+        <div class="col p-2 h2">Edit User:</div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <input type="hidden" name="username" value="{{ i.USERNAME }}">
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Username</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{ i.USERNAME }}
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Name</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input class="form-control me-5" type="text" name="name" placeholder="Name" value="{{ i.name }}">
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Role</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <select class="form-select" name="role" id="role">
+                  {% if i.role == user %}
+                  <option value="user">Standard User</option>
+                  <option value="admin">Admin</option>
+                  {% else %}
+                  <option value="admin">Admin</option>
+                  <option value="user">Standard User</option>
+                  {% endif %}
+                </select>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Email</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input class="form-control me-5" type="email" name="email" placeholder="Email" value="{{ i.email }}">
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Phone</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input class="form-control me-5" type="tel" name="phone" placeholder="Phone" value="{{ i.phone }}">
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <button class="btn btn-primary" type="submit">Confirm Edit</button>
+              </div>
+              <div class="col-sm-2">
+                <a class="btn btn-warning" href="/usermanagement/discard">Discard</a>
+              </div>
+            </div>
+            <div class="mt-3">Note: You can also Leave the input empty to keep existing value</div>
+          </div>
+        </div>
+      </div>
     </form>
 
+
+
+    {% elif mode=='remove' %}
 
     {% endif %}
     {% endif %}
