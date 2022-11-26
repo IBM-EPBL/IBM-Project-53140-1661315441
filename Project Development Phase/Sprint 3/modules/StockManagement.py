@@ -1,14 +1,14 @@
 class Stock:
   def __init__(self, DB, id, name, type, price, quantity, facility, new=False):
     self.DB = DB
-    self.id = id
-    self.name = name
-    self.type = type
-    self.price = price
-    self.quantity = quantity
-    self.facility = facility
+    self.id = str(id)
+    self.name = str(name)
+    self.type = str(type)
+    self.price = str(price)
+    self.quantity = str(quantity)
+    self.facility = str(facility)
     if new:
-      self.id = self.DB.add_item(self.name, self.type, self.price, self.quantity, self.facility)
+      self.id = str(self.DB.add_item(self.name, self.type, self.price, self.quantity, self.facility))
     
   def pull(self):
     d = self.DB.get_item(self.id)
