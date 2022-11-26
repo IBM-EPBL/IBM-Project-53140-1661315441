@@ -6,12 +6,12 @@ from modules.FacilityManagement import FacilityManagement
 from modules.StockManagement import StockManagement
 
 app = Flask(__name__)
-HOSTNAME = "6667d8e9-9d4d-4ccb-ba32-21da3bb5aafc.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud"
-PORT = 30376
-UID = "szk22942"
-PWD = "YhVluZhcmvFKS8NT"
+dsn_hostname = "6667d8e9-9d4d-4ccb-ba32-21da3bb5aafc.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud"
+dsn_port = "30376"
+dsn_uid = "phd49688"
+dsn_pwd = "0FVzO5GGOpX26adE"
 
-DB = DBManagerProxy(HOSTNAME, PORT, UID, PWD)
+DB = DBManager(dsn_hostname, dsn_port, dsn_uid, dsn_pwd)
 UM = UserManagement(DB)
 FM = FacilityManagement(DB)
 SM = StockManagement(DB)
@@ -325,14 +325,14 @@ def signin():
     return redirect(url_for(session['page']))
   return render_template('signin.html')
 
-@app.route('/signin/handle_form', methods=['POST'])
+@app.route('/signin/handle_form', methods=['POST', 'GET'])
 def signin_action():
   username, password = request.form['username'], request.form['password']
   if UM.check_user(username, password):
     session['username'] = username
   else:
     session['message'] = 'Invalid Username or Password'
-    return redirect(url_for('signin'))
+    return redirect('/')
   return redirect(url_for(session['page']))
 
 
