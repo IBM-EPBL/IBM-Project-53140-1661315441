@@ -16,8 +16,6 @@
 
 
     {% if mode=='view' %}
-
-
     <div class="d-flex justify-content-between">
       <h2>User Management:</h2>
       <a href="/usermanagement/add"><button class="btn btn-primary">Add User</button></a>
@@ -40,7 +38,7 @@
         <td>{{ i.phone }}</td>
         {% if i.privilege() > user.privilege() %}
         <td class="container d-flex">
-          <form action="/usermanagement/edit" method="post">
+          <form class="me-2" action="/usermanagement/edit" method="post">
             <input type="hidden" name="username" value="{{ i.USERNAME }}">
             <button class="btn btn-primary" type="submit">Edit</button>
           </form>
@@ -51,7 +49,7 @@
         </td>
         {% else %}
         <td class="container d-flex">
-          <button class="btn btn-primary" disabled>Edit</button>
+          <button class="btn btn-primary me-2" disabled>Edit</button>
           <button class="btn btn-danger" disabled>Remove</button>
         </td>
         {% endif %}
@@ -289,8 +287,6 @@
           </div>
         </div>
       </div>
-    </div>
-      
     </div>
 
 
