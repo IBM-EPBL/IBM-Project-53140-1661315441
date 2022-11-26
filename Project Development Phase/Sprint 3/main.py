@@ -16,9 +16,9 @@ dsn_pwd = "0FVzO5GGOpX26adE"
 DB = DBManager(dsn_hostname, dsn_port, dsn_uid, dsn_pwd)
 UM = UserManagement(DB)
 FM = FacilityManagement(DB)
-SM = StockManagement(DB)
 CON = Constants()
 SG = SendgridAPI()
+SM = StockManagement(DB, UM, SG)
 
 
 # Session Variables:
