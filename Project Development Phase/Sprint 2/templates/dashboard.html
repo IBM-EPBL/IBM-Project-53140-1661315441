@@ -4,10 +4,75 @@
 
 <body>
   {% include "header.html" %}
-  <main class="container p-4">
+  <main class="container p-5">
 
-    <h1>Dashboard Working on Progress</h1>
-    <!-- TODO - Fill Dashboard -->
+    <div class="row">
+
+      <div class="col">
+
+        <div class="row">
+          <h3>Top Selling</h3>
+          <div class="col">
+            <ol class="list-group list-group-numbered">
+              <li class="list-group-item d-flex justify-content-between">
+                <span class="fw-bold ms-2 me-auto">Item 1</span>
+                <span class="badge bg-primary rounded-pill">0</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                <span class="fw-bold ms-2 me-auto">Item 2</span>
+                <span class="badge bg-primary rounded-pill">0</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                <span class="fw-bold ms-2 me-auto">Item 3</span>
+                <span class="badge bg-primary rounded-pill">0</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                <span class="fw-bold ms-2 me-auto">Item 4</span>
+                <span class="badge bg-primary rounded-pill">0</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                <span class="fw-bold ms-2 me-auto">Item 5</span>
+                <span class="badge bg-primary rounded-pill">0</span>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <h3>Low On Stock</h3>
+          <div class="col">
+            <ol class="list-group list-group-numbered">
+              <li class="list-group-item d-flex justify-content-between">
+                <span class="fw-bold ms-2 me-auto">Item 1</span>
+                <span class="badge bg-primary rounded-pill">0</span>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col">
+        <h3>Today's Sales</h3>
+        <div class="col">
+          <table class="table table-striped">
+            <thead>
+              <th>Item Name</th>
+              <th>Total Sold</th>
+              <th>Price</th>
+              <th>Total Revenue</th>
+            </thead>
+            <tr>
+              <td>1</td>
+              <td>2</td>
+              <td>3</td>
+              <td>4</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
 
   </main>
   {% include "scripts.html" %}
