@@ -1,5 +1,6 @@
 <html>
-{% include "head.html" %}
+
+<head>{% include "head.html" %}</head>
 
 <body>
   {% include "header.html" %}
@@ -9,7 +10,7 @@
     {% if mode == 'view' %}
     <h1>Stock</h1>
     <div>
-      Category: 
+      Category:
       <a href="">All</a>
       <a href="">Groceries</a>
       <a href="">Home Appliances</a>
@@ -31,31 +32,31 @@
       </tr>
       {% set items = SM.get_items() %}
       {% for i in items %}
-        <tr>
-          <td>{{ i.id }}</td>
-          <td>{{ i.name }}</td>
-          <td>{{ i.type }}</td>
-          <td>{{ i.price }}</td>
-          <td>
-            <form action="/stock/update" method="post">
-              <input type="hidden" name="id" value="{{ i.id }}">
-              <input type="number" name="quantity" value="{{ i.quantity }}">
-              <button type="submit">Update</button>
-            </form>
-          </td>
-          <td>
-            <form action="/stock/edit" method="post">
-              <input type="hidden" name="id" value="{{ i.id }}">
-              <button type="submit">Edit</button>
-            </form>
-          </td>
-          <td>
-            <form action="/stock/delete" method="post">
-              <input type="hidden" name="id" value="{{ i.id }}">
-              <button type="submit">Delete</button>
-            </form>
-          </td>
-        </tr>
+      <tr>
+        <td>{{ i.id }}</td>
+        <td>{{ i.name }}</td>
+        <td>{{ i.type }}</td>
+        <td>{{ i.price }}</td>
+        <td>
+          <form action="/stock/update" method="post">
+            <input type="hidden" name="id" value="{{ i.id }}">
+            <input type="number" name="quantity" value="{{ i.quantity }}">
+            <button type="submit">Update</button>
+          </form>
+        </td>
+        <td>
+          <form action="/stock/edit" method="post">
+            <input type="hidden" name="id" value="{{ i.id }}">
+            <button type="submit">Edit</button>
+          </form>
+        </td>
+        <td>
+          <form action="/stock/delete" method="post">
+            <input type="hidden" name="id" value="{{ i.id }}">
+            <button type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
       {% endfor %}
     </table>
     <a href="/stock/add"><button type="button">Add New Stock</button></a>
@@ -93,7 +94,7 @@
         <label for="facility">Facility: </label>
         <select name="facility" id="facility">
           {% for i in FM.get_facilities() %}
-            <option value="{{ i.id }}">{{ i.name }} ({{ i.id }})</option>
+          <option value="{{ i.id }}">{{ i.name }} ({{ i.id }})</option>
           {% endfor %}
         </select>
       </div>
@@ -145,7 +146,7 @@
         <label for="facility">Facility: </label>
         <select name="facility" id="facility">
           {% for i in FM.get_facilities() %}
-            <option value="{{ i.id }}">{{ i.name }} ({{ i.id }})</option>
+          <option value="{{ i.id }}">{{ i.name }} ({{ i.id }})</option>
           {% endfor %}
         </select>
         Current Facility: {{ i.facility }}
@@ -176,7 +177,7 @@
 
     <!-- Invalid URL -->
     {% else %}
-      <h1>Invalid Mode</h1>
+    <h1>Invalid Mode</h1>
     {% endif %}
 
   </main>
