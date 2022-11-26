@@ -56,6 +56,7 @@
         <th>Type</th>
         <th>Price</th>
         <th>Quantity</th>
+        <th>Min Value</th>
         <th></th>
         <th>Action</th>
       </thead>
@@ -73,6 +74,7 @@
             <button class="btn btn-primary" type="submit">Update</button>
           </form>
         </td>
+        <td>{{ i.minvalue }}</td>
         <td></td>
         <td class="d-flex">
           <form action="/stock/edit" method="post">
@@ -115,6 +117,10 @@
         <div class="form-outline mt-3">
           <label class="form-label" for="quantity">Initial Quantity: </label>
           <input class="form-control" type="number" id="quantity" name="quantity" value="0" placeholder="quantity" required>
+        </div>
+        <div class="form-outline mt-3">
+          <label class="form-label" for="minvalue">Min Value: </label>
+          <input class="form-control" type="number" id="minvalue" name="minvalue" value="0" placeholder="min value" required>
         </div>
         <div class="form-outline mt-3">
           <label class="form-label" for="facility">Facility: </label>
@@ -170,7 +176,11 @@
       </div>
       <div class="form-outline mt-3">
         <label class="form-label" for="quantity">Quantity: </label>
-        <input class="form-control" type="number" id="quantity" name="quantity" value="{{ i.quantity }}" placeholder="quantity" value="{{ i.quantity }}">
+        <input class="form-control" type="number" id="quantity" name="quantity" value="{{ i.quantity }}" placeholder="quantity">
+      </div>
+      <div class="form-outline mt-3">
+        <label class="form-label" for="minvalue">Min Value: </label>
+        <input class="form-control" type="number" id="minvalue" name="minvalue" value="{{ i.minvalue }}" placeholder="min value">
       </div>
       <div class="form-outline mt-3">
         <label class="form-label" for="facility">Facility: </label>
@@ -247,6 +257,14 @@
             </div>
             <div class="col-sm-9 text-secondary">
               {{ i.quantity }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Min Value</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {{ i.minvalue }}
             </div>
           </div>
           <div class="row">
