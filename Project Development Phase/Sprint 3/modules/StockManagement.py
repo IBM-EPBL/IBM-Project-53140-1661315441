@@ -1,4 +1,5 @@
 from threading import Thread
+import time
 
 
 class Stock:
@@ -33,14 +34,14 @@ class Stock:
 
 
 class StockManagement:
-  def __init__(self, DB, UM, SG):
+  def __init__(self, DB, UM, FM, SG):
     self.DB = DB
     self.UM = UM
+    self.FM = FM
     self.SG = SG
     self.s = []
     self.pull()
-    self.t = Thread(target=self.minlist_thread)
-    self.t.start()
+    self.send_minlist_email()
   
   
   def pull(self):
@@ -51,7 +52,9 @@ class StockManagement:
     
   
   def add_item(self, name, type, price, quantity, minvalue, facility):
-    self.s.append(Stock(self.DB, len(self.s), name, type, price, quantity, minvalue, facility, new=True))
+    i = Stock(self.DB, len(self.s), name, type, price, quantity, minvalue, facility, new=True)
+    self.s.append(i)
+    self.DB.add_log(facility, i.id, price, quantity, 'added')
   
   
   def get_item(self, id):
@@ -99,6 +102,7 @@ class StockManagement:
   def edit_item(self, id, name, type, price, quantity, minvalue, facility):
     for i in self.s:
       if i.id == id:
+        oldquantity = int(i.quantity)
         if name: i.name = name
         if type: i.type = type
         if price: i.price = price
@@ -106,6 +110,11 @@ class StockManagement:
         if minvalue: i.minvalue = minvalue
         if facility: i.facility = facility
         i.push()
+        quantity = int(quantity)
+        if oldquantity < quantity:
+          self.DB.add_log(facility, i.id, price, quantity - oldquantity, 'added')
+        elif oldquantity > quantity:
+          self.DB.add_log(facility, i.id, price, oldquantity - quantity, 'removed')
         return
     raise Exception('Item not found')
   
@@ -137,14 +146,19 @@ class StockManagement:
   
   
   def send_minlist_email(self):
-    minlist = self.get_minlist()
-    if len(minlist) > 0:
-        msg = 'The following items are below minimum value:\n' + '\n'.join([i.name for i in minlist])
-        for i in self.UM.get_users():
-          self.SG.send_message(i, i.email, 'Smart Stock - Low Stock Notification', msg)
+    self.t = Thread(target=self.minlist_thread)
+    self.t.start()
 
 
   def minlist_thread(self):
     while True:
-      self.send_minlist_email()
+      minlist = self.get_minlist()
+      if len(minlist) > 0:
+          msg = 'The following items are below minimum value:\n' + '\n'.join([i.name for i in minlist])
+          for i in self.UM.get_users():
+            a = self.SG.send(i.email, 'Smart Stock - Low Stock Notification', msg)
+            print(f'Mail Sent to {i.email}: {a}')
+          for i in self.FM.get_facilities():
+            a = self.SG.send(i.email, 'Smart Stock - Low Stock Notification', msg)
+            print(f'Mail Sent to {i.email}: {a}')
       time.sleep(7200)

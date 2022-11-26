@@ -19,26 +19,21 @@
         <div class="row">
           <h3>Top Selling</h3>
           <div class="col">
-            <table>
-              <thead>
-                <th>Item</th>
-                <th>Quantity</th>
-                <th>Revenue</th>
-              </thead>
-              {% for i in DB.get_top_sold(5) %}
-              <tr>
-                <td>{{i['item']}}</td>
-                <td>{{i['quantity']}}</td>
-                <td>{{i['revenue']}}</td>
-              </tr>
-              {% endfor %}
-            </table>    
-              
             <ol class="list-group list-group-numbered">
+              {% set soldlist = DB.get_top_sold(5) %}
+              {% if soldlist %}
+              {% for i in soldlist %}
               <li class="list-group-item d-flex justify-content-between">
-                <span class="fw-bold ms-2 me-auto">Item 1</span>
+                <span class="fw-bold ms-2 me-auto">{{i['item']}}</span>
+                <span class="badge bg-primary rounded-pill">{{i['revenue']}}</span>
+              </li>
+              {% endfor %}
+              {% else %}
+              <li class="list-group-item d-flex justify-content-between">
+                <span class="fw-bold ms-2 me-auto">Not Items Sold Today</span>
                 <span class="badge bg-primary rounded-pill">0</span>
               </li>
+              {% endif %}
             </ol>
           </div>
         </div>
@@ -47,23 +42,21 @@
           <h3>Low On Stock</h3>
           <div class="col">
             <ol class="list-group list-group-numbered">
-            {% set minlist = SM.getminlist() %}
-            {% if minlist %}
-            {% for i in minlist %}
+              {% set minlist = SM.get_minlist() %}
+              {% if minlist %}
+              {% for i in minlist %}
               <li class="list-group-item d-flex justify-content-between">
                 <span class="fw-bold ms-2 me-auto">{{i.name}} ({{i.id}})</span>
                 <span class="badge bg-primary rounded-pill">{{i.quantity}}</span>
               </li>
-            {% endfor %}
-            {% else %}
-            </ol>
-            <ol class="list-group list-group-numbered">
+              {% endfor %}
+              {% else %}
               <li class="list-group-item d-flex justify-content-between">
                 <span class="fw-bold ms-2 me-auto">All Items are in enough Quantity</span>
                 <span class="badge bg-primary rounded-pill">0</span>
               </li>
+              {% endif %}
             </ol>
-            {% endif %}
           </div>
         </div>
       </div>

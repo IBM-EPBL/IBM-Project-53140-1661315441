@@ -48,7 +48,7 @@
 
   {% if 'username' in session %}
   <!-- Profile -->
-  <a class="text-white{% if '/profile' in session.path %} text-glow{% endif %}" href="/profile" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View Profile">
+  <a class="text-white{% if 'profile' in session.path %} text-glow{% endif %}" href="/profile" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View Profile">
     <i class="fa-solid fa-user" style="font-size: x-large;"></i>
   </a>
   {% else %}

@@ -14,11 +14,17 @@ dsn_uid = "phd49688"
 dsn_pwd = "0FVzO5GGOpX26adE"
 
 DB = DBManager(dsn_hostname, dsn_port, dsn_uid, dsn_pwd)
+print('Loaded DBManager')
 UM = UserManagement(DB)
+print('Loaded UserManagement')
 FM = FacilityManagement(DB)
+print('Loaded FacilityManagement')
 CON = Constants()
+print('Loaded Constants')
 SG = SendgridAPI()
-SM = StockManagement(DB, UM, SG)
+print('Loaded SendgridAPI')
+SM = StockManagement(DB, UM, FM, SG)
+print('Loaded StockManagement')
 
 
 # Session Variables:
@@ -350,7 +356,7 @@ def page_not_found(e):
 
 @app.context_processor
 def inject_data():
-  return dict(UM=UM, FM=FM, SM=SM, CON=CON)
+  return dict(DB=DB, UM=UM, FM=FM, SM=SM, CON=CON)
 
 
 

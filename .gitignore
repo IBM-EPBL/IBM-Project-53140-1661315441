@@ -3,3 +3,4 @@ __pycache__
 filler
 tmp
 .vscodesendgrid.env
+sendgrid.env
