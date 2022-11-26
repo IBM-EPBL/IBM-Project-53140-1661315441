@@ -85,13 +85,13 @@
         </div>
         <div class="row text-center">
           {% if user.role != 'superadmin' %}
-          <form class="col-sm-8" action="/profile/removeuser" method="post" id="removeuser">
+          <form class="col-sm-8" action="/profile/remove" method="post" id="removeuser">
             <button class="btn btn-danger btn-block mb-4" onclick="removeacc()" type="button"
               id="removepasswordbtn">Remove Account</button>
             <button class="btn btn-danger btn-block mb-4" type="submit" style="display: none;"
               id="removepasswordbtnsub">Confirm Remove Account</button>
             <input class="form-control ms-5 me-5" type="password" name="password" id="removepassword"
-              placeholder="Password" style="display: none;" required>
+              placeholder="Password" minlength="4" style="display: none;" required>
           </form>
           <script>
             function removeacc() {
@@ -187,15 +187,15 @@
         <form action="/profile/changepassword/save" method="post" id="changepassword">
           <div class="form-outline m-4">
             <label class="form-label" for="password">Old Password: </label>
-            <input class="form-control" type="password" id="password" name="password" required>
+            <input class="form-control" type="password" id="password" name="password" minlength="4" required>
           </div>
           <div class="form-outline m-4">
             <label class="form-label" for="newpassword">New Password</label>
-            <input class="form-control" type="password" id="newpassword" name="newpassword" required>
+            <input class="form-control" type="password" id="newpassword" name="newpassword" minlength="4" required>
           </div>
           <div class="form-outline m-4">
             <label class="form-label" for="confirmnewpassword">Confirm New Password</label>
-            <input class="form-control" type="password" id="confirmnewpassword" name="confirmnewpassword" required>
+            <input class="form-control" type="password" id="confirmnewpassword" name="confirmnewpassword" minlength="4" required>
           </div>
           <div class="form-outline m-4">
             <button class="btn btn-primary btn-block me-5" onclick="check()" type="button">Confirm</button>

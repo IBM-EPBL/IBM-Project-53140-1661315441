@@ -60,6 +60,7 @@ class UserManagement:
     
   
   def get_user(self, username):
+    print("get_user:", username)
     for i in self.users:
       if i.USERNAME == username:
         return i
