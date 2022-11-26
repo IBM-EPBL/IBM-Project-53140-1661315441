@@ -5,6 +5,14 @@
 <body>
   {% include "header.html" %}
   <main class="container p-4">
+    {% if 'username' not in session %}
+    <div class="container d-flex flex-column justify-content-center">
+      <h1 class="text-center">You need to sign in to view this page</h1>
+      <div class="text-center">
+        <a class="btn btn-primary" href="/signin">Signin</a>
+      </div>
+    </div>
+    {% else %}
 
     <!-- View Facility -->
     {% if mode == 'view' %}
@@ -213,6 +221,7 @@
     <!-- Invalid URL -->
     {% else %}
     <h1>Invalid Mode</h1>
+    {% endif %}
     {% endif %}
   </main>
   {% include "scripts.html" %}

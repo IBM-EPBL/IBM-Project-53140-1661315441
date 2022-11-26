@@ -29,7 +29,8 @@ SM = StockManagement(DB)
 # Root URL
 @app.route('/')
 def index():
-  return redirect(url_for('dashboard'))
+  session['page'] = 'dashboard'
+  return render_template('home.html')
 
 
 # Dashboard - Page

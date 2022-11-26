@@ -1,19 +1,20 @@
 <html>
 
-<head>{% include "head.html" %}</head>
+<head>
+  {% include "head.html" %}
+</head>
 
 <body>
-  {% include "header.html" %}
-  <main class="container p-4">
-    {% if 'username' in session %}
-    <div class="container d-flex flex-column justify-content-center">
-      <h1 class="text-center">You are already Signed in</h1>
-      <div class="text-center">
-        <a class="btn btn-primary" href="/dashboard">Dashboard</a>
-      </div>
+  {% if 'username' in session %}
+  <div class="container d-flex flex-column justify-content-center">
+    <h1 class="text-center">You are already Signed in</h1>
+    <div class="text-center">
+      <a class="btn btn-primary" href="/dashboard">Dashboard</a>
     </div>
-    {% else %}
-
+  </div>
+  {% else %}
+  <main class="container d-flex justify-content-center align-items-center" style="width: 100vw; height: 100vh;">
+    <div class="border border-5">
     <div class="container d-flex" style="width: fit-content;">
       <img src="{{ url_for('static', filename='img/login.jpg') }}" class="m-5" style="width: 30vw"
         alt="Login Illustration">
@@ -45,9 +46,10 @@
 
       </form>
     </div>
-
-    {% endif %}
+  </div>
   </main>
+
+  {% endif %}
   {% include "scripts.html" %}
 </body>
 

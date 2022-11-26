@@ -5,8 +5,15 @@
 <body>
   {% include "header.html" %}
   <main class="container p-4">
-
-    <!-- View Stock -->
+  <div>
+    {% if 'username' not in session %}
+    <div class="container d-flex flex-column justify-content-center">
+      <h1 class="text-center">You need to sign in to view this page</h1>
+      <div class="text-center">
+        <a class="btn btn-primary" href="/signin">Signin</a>
+      </div>
+    </div>
+    {% else %}<!-- View Stock -->
     {% if mode == 'view' %}
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
@@ -275,7 +282,7 @@
     {% else %}
     <h1>Invalid Mode</h1>
     {% endif %}
-
+    {% endif %}
   </main>
   {% include "scripts.html" %}
 </body>
