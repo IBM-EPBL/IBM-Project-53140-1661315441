@@ -27,6 +27,7 @@ CREATE TABLE stock (
 	type VARCHAR(20) NOT NULL,
 	price DECIMAL(10,2) NOT NULL,
 	quantity INT NOT NULL,
+	minvalue INT NOT NULL,
 	facility INT NOT NULL,
 	PRIMARY KEY (id)
 );
