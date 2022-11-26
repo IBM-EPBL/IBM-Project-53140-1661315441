@@ -158,3 +158,18 @@ class DBManager():
             raise Exception("Invalid Item ID")
         sql = f"delete from stock where id={id};"
         ibm_db.exec_immediate(self.conn, sql)
+
+
+
+
+    # log - id(auto), facility, item, quantity, time(auto)
+    def add_log(self, facility, item, quantity):
+        sql = f"""insert into log (facility,item,quantity)
+                    values ({facility},{item},{quantity});"""
+        ibm_db.exec_immediate(self.conn, sql)
+    
+    def get_logs(self):
+        sql = f"select id,facility,item,quantity,time from log;"
+        d = ibm_db.exec_immediate(self.conn, sql)
+        while i:=ibm_db.fetch_both(d):
+            yield {'id':i['ID'],'facility':i['FACILITY'],'item':i['ITEM'],'quantity':i['QUANTITY'],'time':i['TIME']}
