@@ -47,12 +47,24 @@
         <div class="row mt-5">
           <h3>Low On Stock</h3>
           <div class="col">
+            {% set minlist = SM.getminlist() %}
+            {% if minlist %}
+            {% for i in minlist %}
             <ol class="list-group list-group-numbered">
               <li class="list-group-item d-flex justify-content-between">
-                <span class="fw-bold ms-2 me-auto">Item 1</span>
+                <span class="fw-bold ms-2 me-auto">{{i.name}} ({{i.id}})</span>
+                <span class="badge bg-primary rounded-pill">{{i.quantity}}</span>
+              </li>
+            </ol>
+            {% endfor %}
+            {% else %}
+            <ol class="list-group list-group-numbered">
+              <li class="list-group-item d-flex justify-content-between">
+                <span class="fw-bold ms-2 me-auto">All Items are in enough Quantity</span>
                 <span class="badge bg-primary rounded-pill">0</span>
               </li>
             </ol>
+            {% endif %}
           </div>
         </div>
       </div>

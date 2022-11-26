@@ -138,10 +138,9 @@ class StockManagement:
   
   def send_minlist_email(self):
     minlist = self.get_minlist()
-      if len(minlist) > 0:
+    if len(minlist) > 0:
         msg = 'The following items are below minimum value:\n' + '\n'.join([i.name for i in minlist])
-        sendlist = [i for i in UM.get_users() if i.privilege() < 1]
-        for i in sendlist:
+        for i in self.UM.get_users():
           self.SG.send_message(i, i.email, 'Smart Stock - Low Stock Notification', msg)
 
 
