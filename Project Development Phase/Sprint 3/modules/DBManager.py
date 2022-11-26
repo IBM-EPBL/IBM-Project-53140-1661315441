@@ -162,29 +162,30 @@ class DBManager():
 
 
 
-    # log - id(auto), facility, item, quantity, action, timestamp(auto)
-    def add_log(self, facility, item, quantity, action):
-        sql = f"""insert into log (facility,item,quantity,action)
-                    values ({facility},{item},{quantity},'{action}');"""
+    # log - id(auto), facility, item, price, quantity, action(added, sold), timestamp(auto)
+    def add_log(self, facility, item, price, quantity, action):
+        sql = f"""insert into log (facility,item,price,quantity,action)
+                  values ({facility},{item},{price},{quantity},'{action}');"""
         ibm_db.exec_immediate(self.conn, sql)
 
     def get_logs(self):
-        sql = f"select id,facility,item,quantity,action,timestamp from log;"
+        sql = f"select id,facility,item,price,quantity,action,timestamp from log;"
         d = ibm_db.exec_immediate(self.conn, sql)
         while i:=ibm_db.fetch_both(d):
-            yield {'id':i['ID'],'facility':i['FACILITY'],'item':i['ITEM'],
+            yield {'id':i['ID'],'facility':i['FACILITY'],'item':i['ITEM'],'price':i['PRICE'],
                    'quantity':i['QUANTITY'],'action':i['ACTION'],'timestamp':i['TIMESTAMP']}
 
-    def get_top_items(self, limit):
-        sql = f"""select item, sum(quantity) as total from log group by item order by total desc limit {limit};"""
+    def get_top_sold(self, limit):
+        sql = f"""select item,sum(quantity),sum(price*quantity) as revenue from log 
+                  where action='sold' group by item order by revenue desc limit {limit};"""
         d = ibm_db.exec_immediate(self.conn, sql)
         while i:=ibm_db.fetch_both(d):
-            yield {'item':i['ITEM'],'total':i['TOTAL']}
-        
+            yield {'item':i['ITEM'],'quantity':i['QUANTITY'],'revenue':i['REVENUE']}
 
     def get_today_logs(self):
-        sql = f"select id,facility,item,quantity,action,timestamp from log where timestamp >= current date;"
+        sql = f"""select id,facility,item,price,quantity,action,timestamp from log 
+                  where timestamp > current_date;"""
         d = ibm_db.exec_immediate(self.conn, sql)
         while i:=ibm_db.fetch_both(d):
-            yield {'id':i['ID'],'facility':i['FACILITY'],'item':i['ITEM'],
+            yield {'id':i['ID'],'facility':i['FACILITY'],'item':i['ITEM'],'price':i['PRICE'],
                    'quantity':i['QUANTITY'],'action':i['ACTION'],'timestamp':i['TIMESTAMP']}

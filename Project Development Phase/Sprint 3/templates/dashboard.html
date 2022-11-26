@@ -19,25 +19,24 @@
         <div class="row">
           <h3>Top Selling</h3>
           <div class="col">
+            <table>
+              <thead>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Revenue</th>
+              </thead>
+              {% for i in DB.get_top_sold(5) %}
+              <tr>
+                <td>{{i['item']}}</td>
+                <td>{{i['quantity']}}</td>
+                <td>{{i['revenue']}}</td>
+              </tr>
+              {% endfor %}
+            </table>    
+              
             <ol class="list-group list-group-numbered">
               <li class="list-group-item d-flex justify-content-between">
                 <span class="fw-bold ms-2 me-auto">Item 1</span>
-                <span class="badge bg-primary rounded-pill">0</span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between">
-                <span class="fw-bold ms-2 me-auto">Item 2</span>
-                <span class="badge bg-primary rounded-pill">0</span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between">
-                <span class="fw-bold ms-2 me-auto">Item 3</span>
-                <span class="badge bg-primary rounded-pill">0</span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between">
-                <span class="fw-bold ms-2 me-auto">Item 4</span>
-                <span class="badge bg-primary rounded-pill">0</span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between">
-                <span class="fw-bold ms-2 me-auto">Item 5</span>
                 <span class="badge bg-primary rounded-pill">0</span>
               </li>
             </ol>
@@ -47,17 +46,17 @@
         <div class="row mt-5">
           <h3>Low On Stock</h3>
           <div class="col">
+            <ol class="list-group list-group-numbered">
             {% set minlist = SM.getminlist() %}
             {% if minlist %}
             {% for i in minlist %}
-            <ol class="list-group list-group-numbered">
               <li class="list-group-item d-flex justify-content-between">
                 <span class="fw-bold ms-2 me-auto">{{i.name}} ({{i.id}})</span>
                 <span class="badge bg-primary rounded-pill">{{i.quantity}}</span>
               </li>
-            </ol>
             {% endfor %}
             {% else %}
+            </ol>
             <ol class="list-group list-group-numbered">
               <li class="list-group-item d-flex justify-content-between">
                 <span class="fw-bold ms-2 me-auto">All Items are in enough Quantity</span>
@@ -74,17 +73,21 @@
         <div class="col">
           <table class="table table-striped">
             <thead>
+              <th>Facility</th>
               <th>Item Name</th>
-              <th>Total Sold</th>
               <th>Price</th>
-              <th>Total Revenue</th>
+              <th>Quantity</th>
+              <th>Time</th>
             </thead>
+            {% for i in DB.get_today_logs() %}
             <tr>
-              <td>1</td>
-              <td>2</td>
-              <td>3</td>
-              <td>4</td>
-            </tr>
+              <td>{{ i.facility }}</td>
+              <td>{{ SM.get_item(i.item).name }}</td>
+              <td>{{ i.price }}</td>
+              <td>{{ i.quantity }}</td>
+              <td>{{ i.time }}</td>
+            </tr>    
+            {% endfor %}
           </table>
         </div>
       </div>

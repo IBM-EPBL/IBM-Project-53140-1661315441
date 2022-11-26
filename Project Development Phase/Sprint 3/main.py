@@ -75,7 +75,7 @@ def stock_mode(a):
   elif a == 'delete':
     id = request.form['id']
     return render_template('stock.html', mode='delete', id=id)
-  else:USERPRIVILEGES
+  else:
     return render_template('404.html')
 
 @app.route('/stock/<a>/<b>', methods=['GET', 'POST'])
