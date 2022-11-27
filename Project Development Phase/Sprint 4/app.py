@@ -6,6 +6,7 @@ from modules.FacilityManagement import FacilityManagement
 from modules.StockManagement import StockManagement
 from modules.Constants import Constants
 from modules.SendgridAPI import SendgridAPI
+from modules.LogManagement import LogManagement
 
 app = Flask(__name__)
 dsn_hostname = "6667d8e9-9d4d-4ccb-ba32-21da3bb5aafc.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud"
@@ -25,6 +26,8 @@ SG = SendgridAPI()
 print('Loaded SendgridAPI')
 SM = StockManagement(DB, UM, FM, SG)
 print('Loaded StockManagement')
+LM = LogManagement(DB, SM)
+print('Loaded LogManagement')
 
 
 # Session Variables:
@@ -51,6 +54,15 @@ def dashboard():
   session['page'] = 'dashboard'
   return render_template('dashboard.html')
 
+@app.route('/dashboard/clearlog')
+def dashboard_clearlog():
+  try:
+    LM.clear_all_logs()
+    session['message'] = 'All logs have been cleared'
+  except Exception as e:
+    session['message'] = 'Error: ' + str(e)
+  return redirect(url_for('dashboard'))
+
 
 
 # Stock - Page
@@ -73,8 +85,12 @@ def stock_mode(a):
   elif a == 'update':
     id = request.form['id']
     quantity = request.form['quantity']
-    SM.edit_quantity(id, quantity)
-    return render_template('stock.html', mode='view')
+    try:
+      SM.edit_quantity(id, quantity)
+      return render_template('stock.html', mode='view')
+    except Exception as e:
+      session['message'] = 'Error: ' + str(e)
+      return render_template('stock.html', mode='view')
   elif a == 'edit':
     id = request.form['id']
     return render_template('stock.html', mode='edit', id=id)
@@ -98,28 +114,40 @@ def stock_action(a, b):
     return redirect(url_for('stock'))
   elif b == 'save':
     if a == 'add':
-      name = request.form['name']
-      type = request.form['type']
-      price = request.form['price']
-      quantity = request.form['quantity']
-      minvalue = request.form['minvalue']
-      facility = request.form['facility']
-      SM.add_item(name, type, price, quantity, minvalue, facility)
-      return redirect(url_for('stock'))
+      try:
+        name = request.form['name']
+        type = request.form['type']
+        price = request.form['price']
+        quantity = request.form['quantity']
+        minvalue = request.form['minvalue']
+        facility = request.form['facility']
+        SM.add_item(name, type, price, quantity, minvalue, facility)
+        return redirect(url_for('stock'))
+      except Exception as e:
+        session['message'] = 'Error: ' + str(e)
+        return render_template('stock.html', mode='add')
     elif a == 'edit':
-      id = request.form['id']
-      name = request.form['name']
-      type = request.form['type']
-      price = request.form['price']
-      quantity = request.form['quantity']
-      minvalue = request.form['minvalue']
-      facility = request.form['facility']
-      SM.edit_item(id, name, type, price, quantity, minvalue, facility)
-      return redirect(url_for('stock'))
+      try:
+        id = request.form['id']
+        name = request.form['name']
+        type = request.form['type']
+        price = request.form['price']
+        quantity = request.form['quantity']
+        minvalue = request.form['minvalue']
+        facility = request.form['facility']
+        SM.edit_item(id, name, type, price, quantity, minvalue, facility)
+        return redirect(url_for('stock'))
+      except Exception as e:
+        session['message'] = 'Error: ' + str(e)
+        return render_template('stock.html', mode='edit', id=id)
     elif a == 'delete':
-      id = request.form['id']
-      SM.remove_item(id)
-      return redirect(url_for('stock'))
+      try:
+        id = request.form['id']
+        SM.remove_item(id)
+        return redirect(url_for('stock'))
+      except Exception as e:
+        session['message'] = 'Error: ' + str(e)
+        return render_template('stock.html', mode='delete', id=id)
     else:
       return render_template('404.html')
   else:
@@ -154,26 +182,38 @@ def facilities_action(a,b):
     return redirect(url_for('facilities'))
   elif b == 'save':
     if a == 'add':
-      name = request.form['name']
-      type = request.form['type']
-      address = request.form['address']
-      email = request.form['email']
-      phone = request.form['phone']
-      FM.add_facility(name, type, address, email, phone)  
-      return redirect(url_for('facilities'))
+      try:
+        name = request.form['name']
+        type = request.form['type']
+        address = request.form['address']
+        email = request.form['email']
+        phone = request.form['phone']
+        FM.add_facility(name, type, address, email, phone)  
+        return redirect(url_for('facilities'))
+      except Exception as e:
+        session['message'] = 'Error: ' + str(e)
+        return render_template('facilities.html', mode='add')
     elif a == 'edit':
-      id = request.form['id']
-      name = request.form['name']
-      type = request.form['type']
-      address = request.form['address']
-      email = request.form['email']
-      phone = request.form['phone']
-      FM.edit_facility(id, name, type, address, email, phone)
-      return redirect(url_for('facilities'))
+      try:
+        id = request.form['id']
+        name = request.form['name']
+        type = request.form['type']
+        address = request.form['address']
+        email = request.form['email']
+        phone = request.form['phone']
+        FM.edit_facility(id, name, type, address, email, phone)
+        return redirect(url_for('facilities'))
+      except Exception as e:
+        session['message'] = 'Error: ' + str(e)
+        return render_template('facilities.html', mode='edit', id=id)
     elif a == 'delete':
-      id = request.form['id']
-      FM.remove_facility(id)
-      return redirect(url_for('facilities'))
+      try:
+        id = request.form['id']
+        FM.remove_facility(id)
+        return redirect(url_for('facilities'))
+      except Exception as e:
+        session['message'] = 'Error: ' + str(e)
+        return render_template('facilities.html', mode='delete', id=id)
 
 
 
@@ -211,38 +251,49 @@ def usermanagement_action(a, b):
       password = request.form['password']
       return render_template('usermanagement.html', mode='add2', username=username, password=password)
     elif a == 'add2':
-      username = request.form['username']
-      password = request.form['password']
-      name = request.form['name']
-      role = request.form['role']
-      email = request.form['email']
-      phone = request.form['phone']
-      UM.add_user(username, password, name, role, email, phone)
-      return redirect(url_for('usermanagement'))
+      try:
+        username = request.form['username']
+        password = request.form['password']
+        name = request.form['name']
+        role = request.form['role']
+        email = request.form['email']
+        phone = request.form['phone']
+        UM.add_user(username, password, name, role, email, phone)
+        return redirect(url_for('usermanagement'))
+      except Exception as e:
+        session['message'] = 'Error: ' + str(e)
+        return render_template('usermanagement.html', mode='add2', username=username, password=password)
     elif a == 'edit':
-      username = request.form['username']
-      name = request.form['name']
-      role = request.form['role']
-      email = request.form['email']
-      phone = request.form['phone']
-      UM.edit_user(username, name, role, email, phone)
-      return redirect(url_for('usermanagement'))
+      try:
+        username = request.form['username']
+        name = request.form['name']
+        role = request.form['role']
+        email = request.form['email']
+        phone = request.form['phone']
+        UM.edit_user(username, name, role, email, phone)
+        return redirect(url_for('usermanagement'))
+      except Exception as e:
+        session['message'] = 'Error: ' + str(e)
+        return render_template('usermanagement.html', mode='edit', username=username)
     elif a == 'delete':
-      username = request.form['username']
-      UM.remove_user(username)
-      return redirect(url_for('usermanagement'))
+      try:
+        username = request.form['username']
+        UM.remove_user(username)
+        return redirect(url_for('usermanagement'))
+      except Exception as e:
+        session['message'] = 'Error: ' + str(e)
+        return render_template('usermanagement.html', mode='delete', username=username)
   else:
     return render_template('404.html')
 
 
   
   if a == 'edituser':
-    username = request.form['username']
     try:
       return render_template('usermanagement.html', mode='edit', username=username)
     except Exception as e:
       session['message'] = str(e)
-    return redirect(url_for('usermanagement'))
+      return redirect(url_for('usermanagement'))
   elif a == 'edituserconfirm':
     username = request.form['username']
     name = request.form['name']
@@ -259,9 +310,13 @@ def usermanagement_action(a, b):
                              name=user.name, role=user.role, 
                              email=user.email, phone=user.phone)
   elif a == 'removeuser':
-    username = request.form['username']
-    UM.remove_user(username)
-    return redirect(url_for('usermanagement'))
+    try:
+      username = request.form['username']
+      UM.remove_user(username)
+      return redirect(url_for('usermanagement'))
+    except Exception as e:
+      session['message'] = str(e)
+      return redirect(url_for('usermanagement'))
   else:
     return render_template('404.html')
 
@@ -340,13 +395,18 @@ def signin():
 
 @app.route('/signin/handle_form', methods=['POST', 'GET'])
 def signin_action():
-  username, password = request.form['username'], request.form['password']
-  if UM.check_user(username, password):
-    session['username'] = username
-  else:
-    session['message'] = 'Invalid Username or Password'
-    return redirect('/')
-  return redirect(url_for(session['page']))
+  try:
+    username, password = request.form['username'], request.form['password']
+    if UM.check_user(username, password):
+      session['username'] = username
+      return redirect(url_for(session['page']))
+    else:
+      session['message'] = 'Invalid Username or Password'
+      return redirect('/')
+  except Exception as e:
+    session['message'] = str(e)
+    return redirect('/signin')
+    
 
 
 
@@ -356,7 +416,7 @@ def page_not_found(e):
 
 @app.context_processor
 def inject_data():
-  return dict(DB=DB, UM=UM, FM=FM, SM=SM, CON=CON)
+  return dict(UM=UM, FM=FM, SM=SM, CON=CON, LM=LM)
 
 
 

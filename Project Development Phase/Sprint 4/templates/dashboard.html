@@ -20,7 +20,7 @@
           <h3>Top Selling</h3>
           <div class="col">
             <ol class="list-group list-group-numbered">
-              {% set soldlist = DB.get_top_sold(5) %}
+              {% set soldlist = LM.get_top_sold(5) %}
               {% if soldlist %}
               {% for i in soldlist %}
               <li class="list-group-item d-flex justify-content-between">
@@ -65,6 +65,8 @@
         <h3>Today's Sales</h3>
         <div class="col">
           <table class="table table-striped">
+            {% set soldlist = LM.get_today_logs() %}
+            {% if soldlist %}
             <thead>
               <th>Facility</th>
               <th>Item Name</th>
@@ -72,17 +74,21 @@
               <th>Quantity</th>
               <th>Time</th>
             </thead>
-            {% for i in DB.get_today_logs() %}
+            {% for i in soldlist %}
             <tr>
-              <td>{{ i.facility }}</td>
-              <td>{{ SM.get_item(i.item).name }}</td>
-              <td>{{ i.price }}</td>
-              <td>{{ i.quantity }}</td>
-              <td>{{ i.time }}</td>
+              <td>{{ i['facility'] }}</td>
+              <td>{{ i['name'] }}</td>
+              <td>{{ i['price'] }}</td>
+              <td>{{ i['quantity'] }}</td>
+              <td>{{ i['time'] }}</td>
             </tr>    
             {% endfor %}
+            {% else %}
+            <span class="fw-bold ms-2 me-auto">Not Items Sold Today</span>
+            {% endif %}
           </table>
         </div>
+        <a class="btn btn-danger" href="/dashboard/clearlog">Clear All Log</a>
       </div>
 
     </div>

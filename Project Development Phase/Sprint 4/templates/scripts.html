@@ -1,14 +1,15 @@
 {% if 'message' in session %}
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-  <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+<div id="toastBox" class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+  <div class="toast show" data-autohide="true" role="alert">
     <div class="toast-header">
-      <img src="..." class="rounded me-2" alt="...">
+      <img src="{{ url_for('static', filename='logo/favicon.ico') }}" width="15px" class="rounded me-2" alt="Logo">
       <strong class="me-auto">Smart Stock</strong>
       <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
     <div class="toast-body">{{ session.pop('message') }}</div>
   </div>
 </div>
+<script>setInterval(function(){ document.getElementById('toastBox').style.display = 'none'; }, 5000);</script>
 {% endif %}
 
 <script>

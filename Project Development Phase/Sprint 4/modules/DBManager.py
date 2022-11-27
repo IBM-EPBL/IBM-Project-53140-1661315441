@@ -158,6 +158,10 @@ class DBManager():
             raise Exception("Invalid Item ID")
         sql = f"delete from stock where id={id};"
         ibm_db.exec_immediate(self.conn, sql)
+    
+    def check_item(self, id):
+        sql = f"select id from stock where id={id};"
+        return True if ibm_db.fetch_both(ibm_db.exec_immediate(self.conn, sql)) else False
 
 
 
@@ -168,15 +172,8 @@ class DBManager():
                   values ({facility},{item},{price},{quantity},'{action}');"""
         ibm_db.exec_immediate(self.conn, sql)
 
-    def get_logs(self):
-        sql = f"select id,facility,item,price,quantity,action,timestamp from log;"
-        d = ibm_db.exec_immediate(self.conn, sql)
-        while i:=ibm_db.fetch_both(d):
-            yield {'id':i['ID'],'facility':i['FACILITY'],'item':i['ITEM'],'price':i['PRICE'],
-                   'quantity':i['QUANTITY'],'action':i['ACTION'],'timestamp':i['TIMESTAMP']}
-
     def get_top_sold(self, limit):
-        sql = f"""select item,sum(quantity),sum(price*quantity) as revenue from log 
+        sql = f"""select item,sum(quantity) as quantity,sum(price*quantity) as revenue from log 
                   where action='removed' group by item order by revenue desc limit {limit};"""
         d = ibm_db.exec_immediate(self.conn, sql)
         while i:=ibm_db.fetch_both(d):
@@ -189,3 +186,7 @@ class DBManager():
         while i:=ibm_db.fetch_both(d):
             yield {'id':i['ID'],'facility':i['FACILITY'],'item':i['ITEM'],'price':i['PRICE'],
                    'quantity':i['QUANTITY'],'action':i['ACTION'],'timestamp':i['TIMESTAMP']}
+
+    def clear_all_logs(self):
+        sql = f"delete from log;"
+        ibm_db.exec_immediate(self.conn, sql)

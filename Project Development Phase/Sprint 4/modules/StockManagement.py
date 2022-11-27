@@ -122,8 +122,14 @@ class StockManagement:
   def edit_quantity(self, id, quantity):
     for i in self.s:
       if i.id == id:
+        oldquantity = int(i.quantity)
         i.quantity = quantity
+        quantity = int(quantity)
         i.push()
+        if oldquantity < quantity:
+          self.DB.add_log(i.facility, i.id, i.price, quantity - oldquantity, 'added')
+        elif oldquantity > quantity:
+          self.DB.add_log(i.facility, i.id, i.price, oldquantity - quantity, 'removed')
         return
     raise Exception('Item not found')
   

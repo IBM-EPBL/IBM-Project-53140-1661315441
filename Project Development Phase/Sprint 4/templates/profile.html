@@ -195,25 +195,29 @@
           </div>
           <div class="form-outline m-4">
             <label class="form-label" for="newpassword">New Password</label>
-            <input class="form-control" type="password" id="newpassword" name="newpassword" minlength="4" required>
+            <input class="form-control" type="password" id="newpassword" name="newpassword" minlength="4" 
+              onchange="onChangePassword()" required>
           </div>
           <div class="form-outline m-4">
             <label class="form-label" for="confirmnewpassword">Confirm New Password</label>
-            <input class="form-control" type="password" id="confirmnewpassword" name="confirmnewpassword" minlength="4" required>
+            <input class="form-control" type="password" id="confirmnewpassword" name="confirmnewpassword" 
+              minlength="4" onchange="onChangePassword()" required>
           </div>
           <div class="form-outline m-4">
-            <button class="btn btn-primary btn-block me-5" onclick="check()" type="button">Confirm</button>
+            <button class="btn btn-primary btn-block me-5" type="submit">Confirm</button>
             <a class="btn btn-warning btn-block" href="/profile/changepassword/discard">Discard</a>
           </div>
         </form>
       </div>
     </div>
     <script>
-      function check() {
-        if (document.getElementById('newpassword').value != document.getElementById('confirmnewpassword').value)
-          alert("Both new Passwords do not Match");
+      function onChangePassword() {
+        const password = document.querySelector('input[name=newpassword]');
+        const confirm = document.querySelector('input[name=confirmnewpassword]');
+        if (confirm.value === password.value)
+          confirm.setCustomValidity('');
         else
-          document.getElementById('changepassword').submit();
+          confirm.setCustomValidity('Passwords do not match');
       }
     </script>
     {% endif %}
