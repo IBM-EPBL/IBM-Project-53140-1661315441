@@ -112,9 +112,9 @@ class StockManagement:
         i.push()
         quantity = int(quantity)
         if oldquantity < quantity:
-          self.DB.add_log(facility, i.id, price, quantity - oldquantity, 'added')
+          self.DB.add_log(facility, i.id, price, quantity - oldquantity, 'added' if facility == 'store' else 'received')
         elif oldquantity > quantity:
-          self.DB.add_log(facility, i.id, price, oldquantity - quantity, 'removed')
+          self.DB.add_log(facility, i.id, price, oldquantity - quantity, 'removed' if facility == 'store' else 'sent')
         return
     raise Exception('Item not found')
   
@@ -127,9 +127,9 @@ class StockManagement:
         quantity = int(quantity)
         i.push()
         if oldquantity < quantity:
-          self.DB.add_log(i.facility, i.id, i.price, quantity - oldquantity, 'added')
+          self.DB.add_log(i.facility, i.id, i.price, quantity - oldquantity, 'added' if i.facility == 'store' else 'received')
         elif oldquantity > quantity:
-          self.DB.add_log(i.facility, i.id, i.price, oldquantity - quantity, 'removed')
+          self.DB.add_log(i.facility, i.id, i.price, oldquantity - quantity, 'removed' if i.facility == 'store' else 'sent')
         return
     raise Exception('Item not found')
   

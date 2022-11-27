@@ -52,6 +52,7 @@
     <table class="table table-striped">
       <thead class="table-dark">
         <th>ID</th>
+        <th>Facility</th>
         <th>Name</th>
         <th>Type</th>
         <th>Price</th>
@@ -64,6 +65,7 @@
       {% for i in items %}
       <tr>
         <td>{{ i.id }}</td>
+        <td>{{ FM.get_facility(i.facility).name }}</td>
         <td>{{ i.name }}</td>
         <td>{{ i.type }}</td>
         <td>{{ i.price }}</td>
