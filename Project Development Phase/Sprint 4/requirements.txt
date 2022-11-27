@@ -1,14 +1,10 @@
-Package            Version
------------------- -------
-click              8.1.3
-Flask              2.2.2
-ibm-db             3.1.4
-itsdangerous       2.1.2
-Jinja2             3.1.2
-MarkupSafe         2.1.1
-pip                22.3.1
-python-http-client 3.3.7
-sendgrid           6.9.7
-setuptools         58.1.0
-starkbank-ecdsa    2.2.0
-Werkzeug           2.2.2
+click==8.1.3
+Flask==2.2.2
+ibm-db==3.1.4
+itsdangerous==2.1.2
+Jinja2==3.1.2
+MarkupSafe==2.1.1
+python-http-client==3.3.7
+sendgrid==6.9.7
+starkbank-ecdsa==2.2.0
+Werkzeug==2.2.2

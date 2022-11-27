@@ -5,7 +5,7 @@ from sendgrid.helpers.mail import Mail
 
 class SendgridAPI:
     def __init__(self):
-        self.sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))]
+        self.sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
 
     def send(self, to_email, subject, content):
         message = Mail(from_email='smartstockoffi@gmail.com',
