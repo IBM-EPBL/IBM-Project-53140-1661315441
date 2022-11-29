@@ -18,5 +18,6 @@ class SendgridAPI:
         except:
             return False
 
+
 SG = SendgridAPI()
 SG.send('ganappriyanc@gmail.com', 'Test', 'Test')
