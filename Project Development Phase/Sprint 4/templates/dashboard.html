@@ -1,0 +1,103 @@
+<html>
+
+<head>{% include "head.html" %}</head>
+
+<body>
+  {% include "header.html" %}
+  <main class="container p-5">
+    {% if 'username' not in session %}
+    <div class="container d-flex flex-column justify-content-center">
+      <h1 class="text-center">You need to sign in to view this page</h1>
+      <div class="text-center">
+        <a class="btn btn-primary" href="/signin">Signin</a>
+      </div>
+    </div>
+    {% else %}
+
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <h3>Top Selling</h3>
+          <div class="col">
+            <ol class="list-group list-group-numbered">
+              {% set soldlist = LM.get_top_sold(5) %}
+              {% if soldlist %}
+              {% for i in soldlist %}
+              <li class="list-group-item d-flex justify-content-between">
+                <span class="fw-bold ms-2 me-auto">{{i.name}} ({{i.item}})</span>
+                <span class="badge bg-primary rounded-pill">{{i['revenue']}}</span>
+              </li>
+              {% endfor %}
+              {% else %}
+              <li class="list-group-item d-flex justify-content-between">
+                <span class="fw-bold ms-2 me-auto">Not Items Sold Today</span>
+                <span class="badge bg-primary rounded-pill">0</span>
+              </li>
+              {% endif %}
+            </ol>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <h3>Low On Stock</h3>
+          <div class="col">
+            <ol class="list-group list-group-numbered">
+              {% set minlist = SM.get_minlist() %}
+              {% if minlist %}
+              {% for i in minlist %}
+              <li class="list-group-item d-flex justify-content-between">
+                <span class="fw-bold ms-2 me-auto">{{i.name}} ({{i.id}})</span>
+                <span class="badge bg-primary rounded-pill">{{i.quantity}}</span>
+              </li>
+              {% endfor %}
+              {% else %}
+              <li class="list-group-item d-flex justify-content-between">
+                <span class="fw-bold ms-2 me-auto">All Items are in enough Quantity</span>
+                <span class="badge bg-primary rounded-pill">0</span>
+              </li>
+              {% endif %}
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <h3>Today's Sales</h3>
+        <div class="col">
+          <table class="table table-striped">
+            {% set soldlist = LM.get_today_logs() %}
+            {% if soldlist %}
+            <thead>
+              <th>Facility</th>
+              <th>Item Name</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Action</th>
+              <th>Time</th>
+            </thead>
+            {% for i in soldlist %}
+            <tr>
+              <td>{{ i['facility'] }}</td>
+              <td>{{ i['name'] }}</td>
+              <td>{{ i['price'] }}</td>
+              <td>{{ i['quantity'] }}</td>
+              <td>{{ i['action'] }}</td>
+              <td>{{ i['timestamp'] }}</td>
+            </tr>    
+            {% endfor %}
+            {% else %}
+            <span class="fw-bold ms-2 me-auto">Not Items Sold Today</span>
+            {% endif %}
+          </table>
+        </div>
+        <a class="btn btn-danger" href="/dashboard/clearlog">Clear All Log</a>
+      </div>
+
+    </div>
+
+    {% endif %}
+  </main>
+  {% include "scripts.html" %}
+</body>
+
+</html>
