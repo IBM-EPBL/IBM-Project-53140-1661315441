@@ -11,19 +11,12 @@ from modules.LogManagement import LogManagement
 app = Flask(__name__)
 
 DB = DBManager()
-print('Loaded DBManager')
 UM = UserManagement(DB)
-print('Loaded UserManagement')
 FM = FacilityManagement(DB)
-print('Loaded FacilityManagement')
 CON = Constants()
-print('Loaded Constants')
 SG = SendgridAPI()
-print('Loaded SendgridAPI')
 SM = StockManagement(DB, UM, FM, SG)
-print('Loaded StockManagement')
 LM = LogManagement(DB, SM)
-print('Loaded LogManagement')
 
 # Session Variables:
 # page - The page the user is currently on
@@ -147,7 +140,6 @@ def stock_action(a, b):
       return render_template('404.html')
   else:
     return render_template('404.html')
-
 
 
 
@@ -282,38 +274,6 @@ def usermanagement_action(a, b):
     return render_template('404.html')
 
 
-  
-  if a == 'edituser':
-    try:
-      return render_template('usermanagement.html', mode='edit', username=username)
-    except Exception as e:
-      session['message'] = str(e)
-      return redirect(url_for('usermanagement'))
-  elif a == 'edituserconfirm':
-    username = request.form['username']
-    name = request.form['name']
-    role = request.form['role']
-    email = request.form['email']
-    phone = request.form['phone']
-    try:
-      UM.edit_user(username, name, role, email, phone)
-      return redirect(url_for('usermanagement'))
-    except Exception as e:
-      session['message'] = str(e)
-      user = UM.get_user(username)
-      return render_template('usermanagement.html', mode='edit', username=user.USERNAME, 
-                             name=user.name, role=user.role, 
-                             email=user.email, phone=user.phone)
-  elif a == 'removeuser':
-    try:
-      username = request.form['username']
-      UM.remove_user(username)
-      return redirect(url_for('usermanagement'))
-    except Exception as e:
-      session['message'] = str(e)
-      return redirect(url_for('usermanagement'))
-  else:
-    return render_template('404.html')
 
 
 # Profile - Page
@@ -379,6 +339,9 @@ def profile_action(a, b):
       return render_template('404.html')
   else:
     return render_template('404.html')
+
+
+
 
 # Sign In - Page
 @app.route('/signin')
