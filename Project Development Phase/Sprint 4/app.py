@@ -29,7 +29,6 @@ print('Loaded StockManagement')
 LM = LogManagement(DB, SM)
 print('Loaded LogManagement')
 
-
 # Session Variables:
 # page - The page the user is currently on
 # message - The message to display to the user

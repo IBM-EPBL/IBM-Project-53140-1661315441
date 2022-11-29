@@ -52,19 +52,22 @@ class StockManagement:
     
   
   def add_item(self, name, type, price, quantity, minvalue, facility):
+    print(f'SM.add_item: name:{name}, type:{type}, price:{price}, quantity:{quantity}, minvalue:{minvalue}, facility:{facility}')
     i = Stock(self.DB, len(self.s), name, type, price, quantity, minvalue, facility, new=True)
     self.s.append(i)
     self.DB.add_log(facility, i.id, price, quantity, 'added')
   
   
   def get_item(self, id):
+    print(f'SM.get_item: id:{id}')
     for i in self.s:
-      if i.id == id:
+      if int(i.id) == int(id):
         return i
     raise Exception('Item not found')
 
   
   def get_items(self, sortby='id', sortdir='asc'):
+    print(f'SM.get_items: sortby:{sortby}, sortdir:{sortdir}')
     if sortby == 'id':
       if sortdir == 'asc':
         return sorted(self.s, key=lambda i: i.id)
@@ -100,6 +103,7 @@ class StockManagement:
   
   
   def edit_item(self, id, name, type, price, quantity, minvalue, facility):
+    print(f'SM.edit_item: id:{id}, name:{name}, type:{type}, price:{price}, quantity:{quantity}, minvalue:{minvalue}, facility:{facility}')
     for i in self.s:
       if i.id == id:
         oldquantity = int(i.quantity)
@@ -112,29 +116,36 @@ class StockManagement:
         i.push()
         quantity = int(quantity)
         if oldquantity < quantity:
-          self.DB.add_log(facility, i.id, price, quantity - oldquantity, 'added' if facility == 'store' else 'received')
+          self.DB.add_log(facility, i.id, price, quantity - oldquantity, 
+                          'added' if self.FM.get_facility(i.facility).type == 'store' else 'received')
         elif oldquantity > quantity:
-          self.DB.add_log(facility, i.id, price, oldquantity - quantity, 'removed' if facility == 'store' else 'sent')
+          
+          self.DB.add_log(facility, i.id, price, oldquantity - quantity, 
+                          'sold' if self.FM.get_facility(i.facility).type == 'store' else 'sent')
         return
     raise Exception('Item not found')
   
   
   def edit_quantity(self, id, quantity):
+    print(f'SM.edit_quantity: id:{id}, quantity:{quantity}')
     for i in self.s:
       if i.id == id:
         oldquantity = int(i.quantity)
         i.quantity = quantity
         quantity = int(quantity)
         i.push()
+        print('Old Quantity, Quantity:', oldquantity, quantity, type(oldquantity), type(quantity))
+        print('Print Facility Type', self.FM.get_facility(i.facility).type, type(self.FM.get_facility(i.facility).type))
         if oldquantity < quantity:
-          self.DB.add_log(i.facility, i.id, i.price, quantity - oldquantity, 'added' if i.facility == 'store' else 'received')
+          self.DB.add_log(i.facility, i.id, i.price, quantity - oldquantity, 'added' if self.FM.get_facility(i.facility).type == 'store' else 'received')
         elif oldquantity > quantity:
-          self.DB.add_log(i.facility, i.id, i.price, oldquantity - quantity, 'removed' if i.facility == 'store' else 'sent')
+          self.DB.add_log(i.facility, i.id, i.price, oldquantity - quantity, 'sold' if self.FM.get_facility(i.facility).type == 'store' else 'sent')
         return
     raise Exception('Item not found')
   
   
   def remove_item(self, id):
+    print(f'SM.remove_item: id:{id}')
     for i in self.s:
       if i.id == id:
         i.remove()
@@ -144,27 +155,28 @@ class StockManagement:
 
 
   def get_minlist(self):
+    print(f'SM.get_minlist')
     minlist = []
     for i in self.s:
-      if i.quantity <= i.minvalue:
+      if int(i.quantity) <= int(i.minvalue):
         minlist.append(i)
     return minlist
   
   
   def send_minlist_email(self):
+    print(f'SM.send_minlist_email')
     self.t = Thread(target=self.minlist_thread)
     self.t.start()
 
 
   def minlist_thread(self):
+    print(f'SM.minlist_thread')
     while True:
       minlist = self.get_minlist()
       if len(minlist) > 0:
           msg = 'The following items are below minimum value:\n' + '\n'.join([i.name for i in minlist])
           for i in self.UM.get_users():
-            a = self.SG.send(i.email, 'Smart Stock - Low Stock Notification', msg)
-            print(f'Mail Sent to {i.email}: {a}')
-          for i in self.FM.get_facilities():
-            a = self.SG.send(i.email, 'Smart Stock - Low Stock Notification', msg)
-            print(f'Mail Sent to {i.email}: {a}')
+            if i.privilege() < 1:
+              a = self.SG.send(i.email, 'Smart Stock - Low Stock Notification', msg)
+              print(f'Mail Sent to {i.email}: {a}')
       time.sleep(7200)

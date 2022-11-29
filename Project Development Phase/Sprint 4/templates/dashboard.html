@@ -24,7 +24,7 @@
               {% if soldlist %}
               {% for i in soldlist %}
               <li class="list-group-item d-flex justify-content-between">
-                <span class="fw-bold ms-2 me-auto">{{i['item']}}</span>
+                <span class="fw-bold ms-2 me-auto">{{i.name}} ({{i.item}})</span>
                 <span class="badge bg-primary rounded-pill">{{i['revenue']}}</span>
               </li>
               {% endfor %}
@@ -72,6 +72,7 @@
               <th>Item Name</th>
               <th>Price</th>
               <th>Quantity</th>
+              <th>Action</th>
               <th>Time</th>
             </thead>
             {% for i in soldlist %}
@@ -80,7 +81,8 @@
               <td>{{ i['name'] }}</td>
               <td>{{ i['price'] }}</td>
               <td>{{ i['quantity'] }}</td>
-              <td>{{ i['time'] }}</td>
+              <td>{{ i['action'] }}</td>
+              <td>{{ i['timestamp'] }}</td>
             </tr>    
             {% endfor %}
             {% else %}

@@ -46,8 +46,8 @@ class FacilityManagement:
   
   
   def get_facility(self, id):
+    id = str(id)
     for i in self.f:
-      print(type(i.id), type(id))
       if i.id == id:
         return i
     raise Exception('Facility not found')

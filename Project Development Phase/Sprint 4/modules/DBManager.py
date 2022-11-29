@@ -174,7 +174,7 @@ class DBManager():
 
     def get_top_sold(self, limit):
         sql = f"""select item,sum(quantity) as quantity,sum(price*quantity) as revenue from log 
-                  where action='removed' group by item order by revenue desc limit {limit};"""
+                  where action='sold' group by item order by revenue desc limit {limit};"""
         d = ibm_db.exec_immediate(self.conn, sql)
         while i:=ibm_db.fetch_both(d):
             yield {'item':i['ITEM'],'quantity':i['QUANTITY'],'revenue':i['REVENUE']}
