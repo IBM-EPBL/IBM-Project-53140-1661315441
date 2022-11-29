@@ -1,7 +1,12 @@
+import os
 import ibm_db
 
 class DBManager():
-    def __init__(self, dsn_hostname, dsn_port, dsn_uid, dsn_pwd):
+    def __init__(self):
+        dsn_hostname = os.environ.get('IBM_DB2_HOSTNAME')
+        dsn_port = os.environ.get('IBM_DB2_PORT')
+        dsn_uid = os.environ.get('IBM_DB2_UID')
+        dsn_pwd = os.environ.get('IBM_DB2_PWD')
         dsn_driver = "{IBM DB2 ODBC DRIVER}"
         dsn_database = "BLUDB"
         dsn_protocol = "TCPIP"

@@ -9,12 +9,8 @@ from modules.SendgridAPI import SendgridAPI
 from modules.LogManagement import LogManagement
 
 app = Flask(__name__)
-dsn_hostname = "6667d8e9-9d4d-4ccb-ba32-21da3bb5aafc.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud"
-dsn_port = "30376"
-dsn_uid = "phd49688"
-dsn_pwd = "0FVzO5GGOpX26adE"
 
-DB = DBManager(dsn_hostname, dsn_port, dsn_uid, dsn_pwd)
+DB = DBManager()
 print('Loaded DBManager')
 UM = UserManagement(DB)
 print('Loaded UserManagement')
