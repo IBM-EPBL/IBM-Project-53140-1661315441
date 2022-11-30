@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 from modules.DBManager import DBManager
-from modules.DBManagerProxy import DBManagerProxy
 from modules.UserManagement import UserManagement
 from modules.FacilityManagement import FacilityManagement
 from modules.StockManagement import StockManagement
@@ -150,9 +149,9 @@ def stock_action(a, b):
 def facilities():
     session['page'] = 'facilities'
     return render_template('facilities.html', mode='view')
+
+
 # Modes: view, add, edit, delete
-
-
 @app.route('/facilities/<a>', methods=['GET', 'POST'])
 def facilities_mode(a):
     if a == 'add':
@@ -213,9 +212,9 @@ def facilities_action(a, b):
 def usermanagement():
     session['page'] = 'usermanagement'
     return render_template('usermanagement.html', mode='view')
+
+
 # Modes - view, add, add2, edit, delete
-
-
 @app.route('/usermanagement/<a>', methods=['GET', 'POST'])
 def usermanagement_mode(a):
     if a == 'add':
@@ -285,9 +284,9 @@ def usermanagement_action(a, b):
 def profile():
     session['page'] = 'profile'
     return render_template('profile.html', mode='view')
+
+
 # Modes: view, edit, changepassword
-
-
 @app.route('/profile/<a>', methods=['POST', 'GET'])
 def profile_mode(a):
     if a == 'edit':
