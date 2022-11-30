@@ -1,0 +1,307 @@
+<!-- User Management Page -->
+<html>
+
+<head>{% include "head.html" %}</head>
+
+<body>
+  {% include "header.html" %}
+  <main class="container p-4">
+    {% if 'username' not in session %}
+    <div class="container d-flex flex-column justify-content-center">
+      <h1 class="text-center">You need to sign in to view this page</h1>
+      <div class="text-center">
+        <a class="btn btn-primary" href="/signin">Signin</a>
+      </div>
+    </div>
+    {% else %}
+    {% set user = UM.get_user(session['username']) %}
+
+    {% if user.privilege() > 0 %}
+    <h1>You don't have enough Permission to View this Page</h1>
+    {% else %}
+
+
+    {% if mode=='view' %}
+    <div class="d-flex justify-content-between">
+      <h2>User Management:</h2>
+      <a href="/usermanagement/add"><button class="btn btn-primary">Add User</button></a>
+    </div>
+    <table class="table table-striped">
+      <thead class="table-dark">
+        <th>Username</th>
+        <th>Name</th>
+        <th>Role</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Actions</th>
+      </thead>
+      {% for i in UM.get_users() %}
+      <tr>
+        <td>{{ i.USERNAME }}</td>
+        <td>{{ i.name }}</td>
+        <td>{{ i.role }}</td>
+        <td>{{ i.email }}</td>
+        <td>{{ i.phone }}</td>
+        {% if i.privilege() > user.privilege() %}
+        <td class="container d-flex">
+          <form class="me-2" action="/usermanagement/edit" method="post">
+            <input type="hidden" name="username" value="{{ i.USERNAME }}">
+            <button class="btn btn-primary" type="submit">Edit</button>
+          </form>
+          <form action="/usermanagement/delete" method="post">
+            <input type="hidden" name="username" value="{{ i.USERNAME }}">
+            <button class="btn btn-danger" type="submit">Remove</button>
+          </form>
+        </td>
+        {% else %}
+        <td class="container d-flex">
+          <button class="btn btn-primary me-2" disabled>Edit</button>
+          <button class="btn btn-danger" disabled>Remove</button>
+        </td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+      </tr>
+    </table>
+
+
+
+    {% elif mode=='add' or mode=='add2' %}
+    <div class="container">
+      <h2 class="p-2">Create New User:</h2>
+      <div class="row">
+        <div class="col card me-5" style="min-width: 30vw;">
+          <form action="/usermanagement/add/save" method="post" id="add">
+            <fieldset{% if mode=='add2' %} disabled{% endif %}>
+              <div class="form-outline m-4">
+                <label class="form-label" for="username">Username:</label>
+                <input class="form-control" id="username" type="text" name="username" minlength="3"
+                  placeholder="username" value="{{ username }}" required>
+              </div>
+              <div class="form-outline m-4">
+                <label class="form-label" for="password">Password:</label>
+                <input class="form-control" id="password" type="password" name="password" minlength="4"
+                  placeholder="password" value="{{ password }}" onchange="onChangePassword()" required>
+              </div>
+              <div class="form-outline m-4">
+                <label class="form-label" for="confirmpassword">Confirm Password:</label>
+                <input class="form-control" id="confirmpassword" type="password" name="confirmpassword" minlength="4"
+                  placeholder="confirm password" value="{{ password }}"
+                  onchange="onChangePassword()" required>
+                <div id="passwordMessageBlock" class="form-text"></div>
+              </div>
+              <div class="form-outline m-4">
+                <button class="btn btn-primary me-3" type="submit">Confirm</button>
+                <a href="/usermanagement/add/discard"><button class="btn btn-warning" type="button">Discard</button></a>
+              </div>
+              </fieldset>
+          </form>
+        </div>
+
+        <div class="col card ms-5">
+          <form action="/usermanagement/add2/save" method="post">
+            <fieldset{% if mode!='add2' %} disabled{% endif %}>
+              <input type="hidden" name="username" value="{{ username }}">
+              <input type="hidden" name="password" value="{{ password }}">
+              <div class="form-outline m-4">
+                <label class="form-label" for="name">Name:</label>
+                <input class="form-control" id="name" type="text" name="name" placeholder="name" required>
+              </div>
+              <div class="form-outline m-4">
+                <label class="form-label" for="role">Role:</label>
+                <select class="form-select" name="role" id="role" required>
+                  <option value="">--Select Role--</option>
+                  <option value="user">Standard User</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              <div class="form-outline m-4">
+                <label class="form-label" for="email">Email:</label>
+                <input class="form-control" id="email" type="email" name="email" placeholder="email" required>
+              </div>
+              <div class="form-outline m-4">
+                <label class="form-label" for="phone">Phone:</label>
+                <input class="form-control" id="phone" type="tel" name="phone" placeholder="phone" required>
+              </div>
+              <div class="form-outline m-4">
+                <button class="btn btn-primary" type="submit">Confirm</button>
+                <button class="btn btn-warning" type="button" 
+                  onclick="document.getElementById('add2Discard').submit()">Discard</button>
+              </div>
+              </fieldset>
+          </form>
+          <form action="/usermanagement/add2/discard" method="post" id="add2Discard">
+            <input type="hidden" name="username" value="{{ username }}">
+            <input type="hidden" name="password" value="{{ password }}">
+          </form>
+        </div>
+      </div>
+    </div>
+    </div>
+    <script>
+      function onChangePassword() {
+        const password = document.querySelector('input[name=password]');
+        const confirm = document.querySelector('input[name=confirmpassword]');
+        if (confirm.value === password.value)
+          confirm.setCustomValidity('');
+        else
+          confirm.setCustomValidity('Passwords do not match');
+      }
+    </script>
+
+
+
+    {% elif mode=='edit' %}
+    {% set i = UM.get_user(username) %}
+    <form class="container d-flex m-3" action="/usermanagement/edit/save" method="post">
+      <div class="col-md-8">
+        <div class="col p-2 h2">Edit User:</div>
+        <div class="card mb-3">
+          <div class="card-body">
+            <input type="hidden" name="username" value="{{ i.USERNAME }}">
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Username</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{ i.USERNAME }}
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Name</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input class="form-control me-5" type="text" name="name" placeholder="Name" value="{{ i.name }}">
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Role</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <select class="form-select" name="role" id="role">
+                  {% if i.role == 'user' %}
+                  <option value="user">Standard User</option>
+                  <option value="admin">Admin</option>
+                  {% else %}
+                  <option value="admin">Admin</option>
+                  <option value="user">Standard User</option>
+                  {% endif %}
+                </select>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Email</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input class="form-control me-5" type="email" name="email" placeholder="Email" value="{{ i.email }}">
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Phone</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input class="form-control me-5" type="tel" name="phone" placeholder="Phone" value="{{ i.phone }}">
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <button class="btn btn-primary" type="submit">Confirm Edit</button>
+              </div>
+              <div class="col-sm-2">
+                <a class="btn btn-warning" href="/usermanagement/edit/discard">Discard</a>
+              </div>
+            </div>
+            <div class="mt-3">Note: You can also Leave the input empty to keep existing value</div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+
+
+    {% elif mode=='delete' %}
+    {% set i = UM.get_user(username) %}
+    <div class="col-md-8">
+      <div class="col p-2 h2">Delete User:</div>
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Username</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {{ i.USERNAME }}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Name</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {{ i.name }}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Role</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {{ i.role }}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Email</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {{ i.email }}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Phone</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {{ i.phone }}
+            </div>
+          </div>
+          <hr>
+          <div class="mt-3 mb-3">Do you want to delete the user Permanently?</div>
+          <div class="row">
+            <div class="col-sm-3">
+              <form action="/usermanagement/delete/save" method="post">
+                <input type="hidden" name="username" value="{{ i.USERNAME }}">
+                <button class="btn btn-danger" type="submit">Confirm Delete</button>
+              </form>
+            </div>
+            <div class="col-sm-2">
+              <a class="btn btn-primary" href="/usermanagement/delete/discard">Discard</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    {% endif %}
+    {% endif %}
+    {% endif %}
+  </main>
+  {% include "scripts.html" %}
+</body>
+
+</html>
