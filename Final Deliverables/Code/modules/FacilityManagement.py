@@ -50,7 +50,7 @@ class FacilityManagement:
         for i in self.f:
             if i.id == id:
                 return i
-        raise Exception('Facility not found')
+        return Facility(self.DB, 'NOT FOUND', 'NOT FOUND', 'NOT FOUND', 'NOT FOUND', 'NOT FOUND', 'NOT FOUND')
 
     def get_facilities(self):
         return self.f

@@ -61,7 +61,7 @@ class StockManagement:
         for i in self.s:
             if int(i.id) == int(id):
                 return i
-        raise Exception('Item not found')
+        return Stock(self.DB, 'NOT FOUND', 'NOT FOUND', 'NOT FOUND', 'NOT FOUND', 'NOT FOUND', 'NOT FOUND', 'NOT FOUND')
 
     def get_items(self, sortby='id', sortdir='asc'):
         if sortby == 'id':
